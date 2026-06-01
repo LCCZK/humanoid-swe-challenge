@@ -31,8 +31,6 @@ class PushingEnvCfg():
     random_goal_pose_range = []
 
     #Env configs
-    action_dim = 3
-    single_obs_dim = 15
     # history_lenth = 1
     
     #Noise config

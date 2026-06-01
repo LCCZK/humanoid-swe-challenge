@@ -1,9 +1,9 @@
 import numpy as np
 import functools
 from fastmcp import FastMCP
-from box_pushing.gym_env.base_env import PusingEnv
+from humanoid_swe_challenge.sims.box_pushing.base_env import PusingEnv
 
-import sys
+# import sys
 # import logging
 # logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 

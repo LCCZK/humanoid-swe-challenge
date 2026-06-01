@@ -1,13 +1,11 @@
-import gymnasium as gym
 import numpy as np
+from humanoid_swe_challenge.sims.box_pushing.base_env import PusingEnv
 
-from box_pushing.gym_env.base_env import PusingEnv
-
-env = PusingEnv(render_mode="rgb_array")
+env = PusingEnv(render_mode="human")
 observation, info = env.reset()
 
 for _ in range(1000000):
-    action = np.array([0.0, -0.1, 0.0])
+    action = np.array([0.0, 0.1, 0.0])
     observation, _, _, _, info = env.step(action)
     print()
     print(observation)
