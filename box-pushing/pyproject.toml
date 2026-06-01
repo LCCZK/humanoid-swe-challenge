@@ -5,6 +5,9 @@ description = "Humanoid SWE intern challenge"
 requires-python = ">=3.11"
 dependencies = ["mujoco"]
 
+[project.scripts]
+box-pushing-mcp = "box_pushing.mcp:main"
+
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"

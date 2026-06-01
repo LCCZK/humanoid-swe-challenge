@@ -3,7 +3,7 @@ import numpy as np
 
 from box_pushing.gym_env.base_env import PusingEnv
 
-env = PusingEnv(render_mode="human")
+env = PusingEnv(render_mode="rgb_array")
 observation, info = env.reset()
 
 for _ in range(1000000):

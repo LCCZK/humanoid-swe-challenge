@@ -44,22 +44,22 @@ class PusingEnv(gym.Env):
         self._step_count = 0
         mj.mj_resetData(self.scene.model, self.scene.data)# type: ignore
         mj.mj_forward(self.scene.model, self.scene.data)# type: ignore
-        self.scene.render(self.render_mode)
+        self.render()
 
-        return self.get_obv(), {}
+        return self.get_obs(), {}
         
     def step(self, action: np.ndarray, step_count:int = 1):
         for s in range(step_count):
             self.scene.data.ctrl = action.copy()
             for _ in range(self.cfg.decimation):
                 mj.mj_step(self.scene.model, self.scene.data)# type: ignore
-            self.render
-            time.sleep(1/120)
+            self.render()
+            # time.sleep(1/120)
         self._step_count += step_count
         
-        return self.get_obv(), 0, False, False, {}
+        return self.get_obs(), 0, False, False, {}
     
-    def get_obv(self):
+    def get_obs(self):
         return {"pusher_xyz": self.scene.data.xpos[self.id_pusher][:3].copy(),
                 "box_xyz": self.scene.data.xpos[self.id_box][:3].copy(),
                 "box_yaw": quat_to_yaw(self.scene.data.xquat[self.id_box].copy()),

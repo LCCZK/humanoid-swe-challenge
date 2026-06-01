@@ -1,4 +1,5 @@
 import mujoco as mj
+import cv2
 from pathlib import Path
 from mujoco import viewer
 import time
@@ -18,7 +19,10 @@ class PushingScene:
         elif render_mode == "rgb_array":
             if not hasattr(self, "_renderer") or self._renderer is None:
                 self._renderer = mj.Renderer(self.model, height=480, width=640)
-            self._renderer.update_scene(self.data)
-            return self._renderer.render()
+            self._renderer.update_scene(self.data, camera=-1)
+            frame = self._renderer.render()
+            cv2.imshow("box_pushing", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+            cv2.waitKey(1)
+            return frame
 
         return None
