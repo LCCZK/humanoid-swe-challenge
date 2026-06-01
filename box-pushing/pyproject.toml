@@ -1,0 +1,16 @@
+[project]
+name = "box-pushing"
+version = "0.1.0"
+description = "Humanoid SWE intern challenge"
+requires-python = ">=3.11"
+dependencies = ["mujoco"]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"box_pushing.mj_scene" = ["*.xml"]
