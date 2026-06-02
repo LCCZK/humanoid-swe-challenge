@@ -1,7 +1,9 @@
 import mujoco
 import mujoco.viewer
 
-from humanoid_swe_challenge.sims.box_pushing.base_env import PusingEnv
+from humanoid_swe_challenge.sims.box_pushing.base_env import BoxPusingEnv
+from humanoid_swe_challenge.sims.pusher_manip.base_env import PusherManipEnv
 
-env = PusingEnv()
+
+env = PusherManipEnv()
 mujoco.viewer.launch(env.model, env.data)

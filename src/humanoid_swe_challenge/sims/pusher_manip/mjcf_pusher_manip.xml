@@ -1,0 +1,74 @@
+<mujoco model="pushing_scene_cfg_match">
+  <asset>
+    <material name="mat_workspace"  rgba="0.70 0.70 0.70 1" shininess="0.05"/>
+    <material name="mat_pusher"     rgba="0.66 0.41 0.20 1" shininess="0.2"/>
+    <material name="mat_goal_g"     rgba="0 1 0 0.35"/>
+    <material name="mat_goal_r"     rgba="1 0 0 0.35"/>
+    <material name="mat_goal_b"     rgba="0 0 1 0.35"/>
+  </asset>
+
+  <worldbody>
+    <!-- light -->
+    <light name="light" type="directional" dir="0 0 -1" diffuse="0.75 0.75 0.75" specular="0.2 0.2 0.2"/>
+
+    <!-- Ground -->
+    <geom name="ground" type="plane" size="5 5 0.1"/>
+
+    <!-- Workspace -->
+    <body name="workspace" pos="0 0 0.005" quat="1 0 0 0">
+      <geom name="workspace_geom" type="box"
+            size="0.4 0.4 0.01"
+            material="mat_workspace"
+            friction="0.5 0.005 0.0001"/>
+    </body>
+
+    <!-- Pusher -->
+    <body name="pusher" pos="0 0 0.05" quat="1 0 0 0" gravcomp="1">
+        <joint name="pusher_x" type="slide" axis="1 0 0" damping="1"/> 
+        <joint name="pusher_y" type="slide" axis="0 1 0" damping="1"/>
+        <joint name="pusher_z" type="slide" axis="0 0 1" damping="1"/>
+        <geom name="pusher_geom"
+              type="sphere"
+              size="0.03"
+              material="mat_pusher"
+              friction="0.5 0.005 0.0001"
+              mass="0.5"/>
+    </body>
+
+    <!-- goal -->
+    <body name="goal_r" pos="0 0.3 0.05" quat="1 0 0 0" mocap="true">
+      <geom name="goal_r_geom" 
+            type="sphere" 
+            size="0.03"
+            material="mat_goal_r" 
+            contype="0" 
+            conaffinity="0"/>
+    </body>
+
+    <body name="goal_g" pos="0.2 0.3 0.05" quat="1 0 0 0" mocap="true">
+      <geom name="goal_g_geom" 
+            type="sphere" 
+            size="0.03"
+            material="mat_goal_g" 
+            contype="0" 
+            conaffinity="0"/>
+    </body>
+
+    <body name="goal_b" pos="-0.2 0.3 0.05" quat="1 0 0 0" mocap="true">
+      <geom name="goal_b_geom" 
+            type="sphere" 
+            size="0.03"
+            material="mat_goal_b" 
+            contype="0" 
+            conaffinity="0"/>
+    </body>
+
+  </worldbody>
+
+  <actuator>
+    <velocity name="pusher_vx" joint="pusher_x" kv="80"/>
+    <velocity name="pusher_vy" joint="pusher_y" kv="80"/>
+    <velocity name="pusher_vz" joint="pusher_z" kv="80"/>
+  </actuator>
+
+</mujoco>

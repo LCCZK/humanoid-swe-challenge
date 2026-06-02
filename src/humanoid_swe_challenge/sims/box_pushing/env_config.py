@@ -1,13 +1,10 @@
 import numpy as np
 
-class PushingEnvCfg():
+class BoxPushingEnvCfg():
     #Sim
     dt = 1/120
     decimation = 5
     max_step_count = 1000
-
-    #Workspace
-    workspace_size = np.array([0.4, 1.0, 0.01])*2
 
     #pusher
     pusher_body_name = "pusher"

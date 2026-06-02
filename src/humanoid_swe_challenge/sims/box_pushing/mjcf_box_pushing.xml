@@ -1,7 +1,4 @@
 <mujoco model="pushing_scene_cfg_match">
-
-
-
   <asset>
     <material name="mat_workspace"  rgba="0.70 0.70 0.70 1" shininess="0.05"/>
     <material name="mat_box"        rgba="0.43 0.20 0.66 1" shininess="0.2"/>
@@ -22,13 +19,13 @@
     <!-- Workspace -->
     <body name="workspace" pos="0 0 0.005" quat="1 0 0 0">
       <geom name="workspace_geom" type="box"
-            size="0.4 1.0 0.01"
+            size="0.4 0.6 0.01"
             material="mat_workspace"
             friction="0.5 0.005 0.0001"/>
     </body>
 
     <!-- Pusher -->
-    <body name="pusher" pos="0 -0.9 0.0225" quat="1 0 0 0" gravcomp="1">
+    <body name="pusher" pos="0 -0.5 0.0225" quat="1 0 0 0" gravcomp="1">
         <joint name="pusher_x" type="slide" axis="1 0 0" damping="1"/> 
         <joint name="pusher_y" type="slide" axis="0 1 0" damping="1"/>
         <joint name="pusher_z" type="slide" axis="0 0 1" damping="1"/>
@@ -41,7 +38,7 @@
     </body>
 
     <!-- Box -->
-    <body name="box" pos="0 -0.8 0.045" quat="1 0 0 0">
+    <body name="box" pos="0 -0.45 0.045" quat="1 0 0 0">
       <freejoint/>
       <geom name="box_geom" type="box"
             size="0.06 0.05 0.035"
@@ -51,7 +48,7 @@
     </body>
 
     <!-- goal -->
-    <body name="goal_r" pos="0 0.8 0.045" quat="1 0 0 0" mocap="true">
+    <body name="goal_r" pos="0 0.5 0.045" quat="1 0 0 0" mocap="true">
       <geom name="goal_r_geom" 
             type="box" 
             size="0.06 0.05 0.035"
@@ -60,7 +57,7 @@
             conaffinity="0"/>
     </body>
 
-    <body name="goal_g" pos="0.2 0.8 0.045" quat="1 0 0 0" mocap="true">
+    <body name="goal_g" pos="0.2 0.5 0.045" quat="1 0 0 0" mocap="true">
       <geom name="goal_g_geom" 
             type="box" 
             size="0.06 0.05 0.035"
@@ -69,7 +66,7 @@
             conaffinity="0"/>
     </body>
 
-    <body name="goal_b" pos="-0.2 0.8 0.045" quat="1 0 0 0" mocap="true">
+    <body name="goal_b" pos="-0.2 0.5 0.045" quat="1 0 0 0" mocap="true">
       <geom name="goal_b_geom" 
             type="box" 
             size="0.06 0.05 0.035"
@@ -81,9 +78,9 @@
   </worldbody>
 
   <actuator>
-    <velocity name="pusher_vx" joint="pusher_x" kv="30"/>
-    <velocity name="pusher_vy" joint="pusher_y" kv="30"/>
-    <velocity name="pusher_vz" joint="pusher_z" kv="30"/>
+    <velocity name="pusher_vx" joint="pusher_x" kv="80"/>
+    <velocity name="pusher_vy" joint="pusher_y" kv="80"/>
+    <velocity name="pusher_vz" joint="pusher_z" kv="80"/>
   </actuator>
 
 </mujoco>
