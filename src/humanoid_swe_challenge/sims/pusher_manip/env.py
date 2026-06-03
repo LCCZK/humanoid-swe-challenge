@@ -3,7 +3,7 @@ import mujoco as mj
 import numpy as np
 from pathlib import Path
 
-from humanoid_swe_challenge.sims.pusher_manip.env_config import PusherManipEnvCfg
+from humanoid_swe_challenge.config import PusherManipEnvCfg
 from humanoid_swe_challenge.sims.base import BaseEnv
 
 class PusherManipEnv(BaseEnv):
