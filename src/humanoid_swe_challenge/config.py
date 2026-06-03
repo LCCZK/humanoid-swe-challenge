@@ -31,3 +31,15 @@ class PusherManipEnvCfg():
 
     sim_cfg = SimCfg()
     video_cfg = VideoCfg()
+
+class BoxPushingEnvCfg():
+    # import numpy as np
+
+    task_name: str = "Box Pushing"
+    # random_goal_pose: bool = True
+    # random_goal_pose_low = np.array([-0.3, -0.3, 0.05])
+    # random_goal_pose_high = np.array([0.3, 0.3, 0.65])
+
+    sim_cfg = SimCfg()
+    video_cfg = VideoCfg()
+

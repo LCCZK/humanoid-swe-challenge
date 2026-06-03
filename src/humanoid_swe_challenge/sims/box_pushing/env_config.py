@@ -11,13 +11,10 @@ class BoxPushingEnvCfg():
     pusher_joint_x_name = "pusher_x"
     pusher_joint_y_name = "pusher_y"
     pusher_joint_z_name = "pusher_z"
-    pusher_radius = 0.0125
 
     #box
     box_body_name = "box"
-    box_size = np.array([0.06, 0.05, 0.035])*2
     box_random_init_pos = False
-    box_random_init_pos_range = []
 
     #goal
     goal_r_body_name = "goal_r"

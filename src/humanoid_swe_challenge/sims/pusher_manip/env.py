@@ -72,6 +72,12 @@ class PusherManipEnv(BaseEnv):
 
         return self.get_obs(), 0, False, False, {}
     
+    def get_obs(self):
+        return {"pusher_xyz": self.data.xpos[self.id_pusher][:3].copy(),
+                "goal_red_xyz": self.data.xpos[self.id_goal_r][:3].copy(),
+                "goal_green_xyz": self.data.xpos[self.id_goal_g][:3].copy(),
+                "goal_blue_xyz": self.data.xpos[self.id_goal_b][:3].copy(),}
+    
     def _randomise_goals(self, goal_id):
         goal_xyz = np.random.rand(1,3) * (self.cfg.random_goal_pose_high - self.cfg.random_goal_pose_low) + self.cfg.random_goal_pose_low
         self._set_goal(goal_xyz, goal_id)
@@ -80,9 +86,4 @@ class PusherManipEnv(BaseEnv):
         mid = self.model.body_mocapid[goal_id]
         self.data.mocap_pos[mid][:3] = goal_xyz.copy()
     
-    def get_obs(self):
-        return {"pusher_xyz": self.data.xpos[self.id_pusher][:3].copy(),
-                "goal_red_xyz": self.data.xpos[self.id_goal_r][:3].copy(),
-                "goal_green_xyz": self.data.xpos[self.id_goal_g][:3].copy(),
-                "goal_blue_xyz": self.data.xpos[self.id_goal_b][:3].copy(),}
 

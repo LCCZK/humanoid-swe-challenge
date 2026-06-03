@@ -2,7 +2,7 @@ import signal
 import numpy as np
 import functools
 from fastmcp import FastMCP
-from humanoid_swe_challenge.sims.box_pushing.base_env import BoxPusingEnv
+from humanoid_swe_challenge.sims.box_pushing.env import BoxPusingEnv
 from humanoid_swe_challenge.config import MCP_HOST, MCP_PORT
 
 # import sys
