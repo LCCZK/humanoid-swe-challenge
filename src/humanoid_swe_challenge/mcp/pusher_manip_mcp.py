@@ -31,7 +31,7 @@ def start_simulation() -> str:
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = PusherManipEnv(render_mode="record_video")
+    ENV = PusherManipEnv(render_mode=None)
     ENV.reset(seed=42)
     return "Simulation started."
 
