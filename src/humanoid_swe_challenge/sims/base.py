@@ -30,6 +30,10 @@ class BaseEnv(gym.Env):
         self.video_path = video_cfg.video_path
         self.video_size = video_cfg.video_size
         self._frames: list = []
+        
+        # self._depth_renderer = mj.Renderer(self.model, width=self.video_size[0], height=self.video_size[1])
+        # self._depth_renderer.enable_depth_rendering()
+        
         self._renderer = None
 
         if self.record_video:
@@ -43,6 +47,10 @@ class BaseEnv(gym.Env):
 
         return self._renderer.render()
     
+    # def get_current_frame_depth(self):
+    #     self._depth_renderer.update_scene(self.data, camera=-1)
+    #     return self._depth_renderer.render()
+
     def buffer_video(self):
         frame = self.get_current_frame()
         self._frames.append(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))

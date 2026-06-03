@@ -53,11 +53,11 @@ def run_agent(prompt: str):
 
 
 def main():
-    # run_agent("run the 3D box-pushing simulation, check the simulation description. Then push the box into the blue goal. The pusher and the box can break contact, and the box will not move if the pusher is not in contact with the box. Multiple actions can be applied, and the task is defintly achieveable. You should pay close attention to the position of the pusher and the xyz coordinate and yaw of the box, think about where the pusher is making contact with the box. This is a complex task so think carefully before commit to any significant actions.")
+    run_agent("run the 3D box-pushing simulation, check the simulation description. Then push the purple box into the blue goal. Use the image render of the environment to better understand the task. The pusher and the box can break contact, and the box will not move if the pusher is not in contact with the box. If contact is lost or you want to push the box to another direction, it is better to use the updated image render to try to re-establish contact an to confirom how the pusher is making contact with the box. Make sure to check the visual occasionally to update your understanding. Multiple actions can be applied, and the task is defintly achieveable. In the rendered image, the pusher is the sphere coloured orange")
     # run_agent("run the pusher manipulation simulation, check the simulation description. " \
     # "Complete the manipulation task, move the pusher to where the blue goal is.")
-    run_agent("run the pusher manipulation simulation, check the simulation description. " \
-    "Complete the manipulation task, move the pusher to where the blue goal is. After that moved to the red goal. After that moved to the green goal.")
+    # run_agent("run the pusher manipulation simulation, check the simulation description. " \
+    # "Complete the manipulation task, move the pusher to where the blue goal is. After that moved to the red goal. After that moved to the green goal.")
 
 
 if __name__ == "__main__":

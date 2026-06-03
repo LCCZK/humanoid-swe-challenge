@@ -5,6 +5,7 @@ from fastmcp import FastMCP
 
 from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
 from humanoid_swe_challenge.config import MCP_HOST, MCP_PORT
+from humanoid_swe_challenge.mcp.utils import obs_to_dict
 
 import sys
 import logging
@@ -24,13 +25,6 @@ def require_simulation(func):
         return func(*args, **kwargs)
     return wrapper
 
-def _obs_to_dict(obs: dict) -> dict:
-    obs_c = obs.copy()
-    for  k, v in obs_c.items():
-        if isinstance(v, np.ndarray):
-            obs_c[k]=v.tolist()
-
-    return obs_c
 
 @mcp.tool
 def start_simulation() -> str:
@@ -57,19 +51,19 @@ def get_observation() -> dict|str:
     """
     obs = ENV.get_obs()
     logger.debug(msg="get_observation called")
-    return _obs_to_dict(obs)
+    return obs_to_dict(obs)
 
 @mcp.tool
 @require_simulation
 def control_pusher(vx: float, vy: float, vz: float, duration: int)  -> dict|str:
     """
     Apply linear velocity control to the pusher end effector for duration simulation steps.
-    vx, vy, vz: linear velocity in [-1.000, 1.000]. 
-    duration:  duration=1 applys the control signal once and advance the simulation for approximately 5/120 s. duration is capped at 100
+    vx, vy, vz: linear velocity in [-1.000, 1.000], can take up to 8 decimal places. 
+    duration:  duration=1 applys the control signal once and advance the simulation for approximately 5/120 s, duration is capped at 100. 
     Returns updated observation.
     """
     obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=duration)
-    return _obs_to_dict(obs)
+    return obs_to_dict(obs)
 
 @mcp.tool
 def get_simulation_description() -> str:

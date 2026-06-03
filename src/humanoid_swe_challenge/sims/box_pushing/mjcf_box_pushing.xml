@@ -2,7 +2,7 @@
   <asset>
     <material name="mat_workspace"  rgba="0.70 0.70 0.70 1" shininess="0.05"/>
     <material name="mat_box"        rgba="0.43 0.20 0.66 1" shininess="0.2"/>
-    <material name="mat_pusher"     rgba="0.66 0.41 0.20 1" shininess="0.2"/>
+    <material name="mat_pusher"     rgba="1 0.65 0.20 1"/>
     <material name="mat_goal_g"     rgba="0 1 0 0.35"/>
     <material name="mat_goal_r"     rgba="1 0 0 0.35"/>
     <material name="mat_goal_b"     rgba="0 0 1 0.35"/>
@@ -21,17 +21,17 @@
       <geom name="workspace_geom" type="box"
             size="0.4 0.6 0.01"
             material="mat_workspace"
-            friction="0.5 0.005 0.0001"/>
+            friction="0.2 0.005 0.0001"/>
     </body>
 
     <!-- Pusher -->
-    <body name="pusher" pos="0 -0.5 0.0225" quat="1 0 0 0" gravcomp="1">
+    <body name="pusher" pos="0 -0.5 0.025" quat="1 0 0 0" gravcomp="1">
         <joint name="pusher_x" type="slide" axis="1 0 0" damping="1"/> 
         <joint name="pusher_y" type="slide" axis="0 1 0" damping="1"/>
         <joint name="pusher_z" type="slide" axis="0 0 1" damping="1"/>
         <geom name="pusher_geom"
               type="sphere"
-              size="0.0125"
+              size="0.015"
               material="mat_pusher"
               friction="0.5 0.005 0.0001"
               mass="0.5"/>
@@ -44,7 +44,7 @@
             size="0.06 0.05 0.035"
             material="mat_box"
             friction="0.0 0.001 0.0001"
-            mass="0.5"/>
+            mass="0.4"/>
     </body>
 
     <!-- goal -->

@@ -5,6 +5,8 @@ from fastmcp import FastMCP
 from humanoid_swe_challenge.sims.box_pushing.env import BoxPusingEnv
 from humanoid_swe_challenge.config import MCP_HOST, MCP_PORT
 
+from humanoid_swe_challenge.mcp.utils import obs_to_dict, frame_to_base64
+
 # import sys
 # import logging
 # logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -20,24 +22,15 @@ def require_simulation(func):
         return func(*args, **kwargs)
     return wrapper
 
-def _obs_to_dict(obs: dict) -> dict:
-    obs_c = obs.copy()
-    for  k, v in obs_c.items():
-        if isinstance(v, np.ndarray):
-            print("np_array")
-            obs_c[k]=v.tolist()
-            
-    return obs_c
-
 @mcp.tool
 def start_simulation():
-    """Start the box-pusing simulation."""
+    """Start the box-pusing simulation in MuJoCo. If simulation is initialise successfuly the tool will return a render image in Base 64 of the current environment"""
     global ENV
     if ENV is not None:
         return "Simulation already running."
     ENV = BoxPusingEnv(render_mode="record_video")
     ENV.reset()
-    return "Simulation started."
+    return get_visual()
 
 @mcp.tool
 @require_simulation
@@ -49,19 +42,33 @@ def close_simulation():
 @mcp.tool
 @require_simulation
 def get_observation():
-    """Return the current simulation state: pusher xyz, box xyz/yaw, xyz/yaw for three goals with colour red/green/blue and whether the pusher is currently in contact with the box."""
-    return _obs_to_dict(ENV.get_obs())
+    """Return the current simulation state in a dictionary contains: pusher xyz, box xyz/yaw, xyz/yaw for three goals with colour red/green/blue and whether the pusher is currently in contact with the box."""
+    return obs_to_dict(ENV.get_obs())
+
+@mcp.tool
+@require_simulation
+def get_visual() -> dict:
+    """Return a rendered image in Base 64 of the state of the current environment"""
+    print("get visual called")
+    frame_b64=frame_to_base64(ENV.get_current_frame())
+    return {
+        "type": "image",
+        "media_type": "image/jpeg",
+        "data": frame_b64,
+    }
 
 @mcp.tool
 @require_simulation
 def control_pusher(vx: float, vy: float, vz: float, duration: int):
     """
-    Apply velocity control to the pusher end effector for duration simulation steps.
-    vx, vy, vz: velocity in [-1.0, 1.0]. (duration=1 is approximately 5/120 s), duration is capped at 10
+    Apply linear velocity control to the pusher end effector for duration simulation steps.
+    vx, vy, vz: linear velocity in [-1.000, 1.000], can take up to 8 decimal places. 
+    duration:  duration=1 applys the control signal once and advance the simulation for approximately 5/120 s, duration is capped at 100. 
+    prioritise reducing duration for precise control. 
     Returns updated observation.
     """
     obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=duration)
-    return _obs_to_dict(obs)
+    return obs_to_dict(obs)
 
 # @mcp.tool
 # @require_simulation
