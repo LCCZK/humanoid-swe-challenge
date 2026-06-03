@@ -3,7 +3,7 @@ import numpy as np
 import functools
 from fastmcp import FastMCP
 
-from humanoid_swe_challenge.sims.pusher_manip.base_env import PusherManipEnv
+from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
 from humanoid_swe_challenge.config import MCP_HOST, MCP_PORT
 
 import sys

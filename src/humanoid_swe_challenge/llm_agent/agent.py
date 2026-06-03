@@ -10,7 +10,6 @@ _SERVER_URL = f"http://{MCP_HOST}:{MCP_PORT}/mcp"
 
 # _SERVER_PARAMS = StdioServerParameters(command="humanoid-gym-mcp")
 
-
 async def _run_agent(prompt: str) -> dict:
     messages: list = [{"role": "user", "content": prompt}]
 
@@ -20,7 +19,7 @@ async def _run_agent(prompt: str) -> dict:
             tools = await list_tools(session)
 
             while True:
-                trimmed = messages[:1] + messages[-50:] if len(messages) > 51 else messages
+                trimmed = messages[:1] + messages[-100:] if len(messages) > 101 else messages
                 response = call_llm(trimmed, tools)
                 msg = response.choices[0].message
                 if msg.reasoning_content:

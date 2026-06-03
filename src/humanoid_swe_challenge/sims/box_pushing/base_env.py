@@ -99,7 +99,6 @@ class BoxPusingEnv(gym.Env):
             if not hasattr(self, "_viewer") or self._viewer is None:
                 self._viewer = viewer.launch_passive(self.model, self.data)
             self._viewer.sync()
-            time.sleep(1/120)
             return None
 
         elif self.render_mode == "rgb_array":
