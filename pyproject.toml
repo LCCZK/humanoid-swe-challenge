@@ -6,8 +6,8 @@ requires-python = ">=3.11"
 dependencies = ["mujoco"]
 
 [project.scripts]
-humanoid-box-pushing-mcp = "humanoid_swe_challenge.mcp.box_pushing_mcp:main"
-humanoid-pusher-manip-mcp = "humanoid_swe_challenge.mcp.pusher_manip_mcp:main"
+box-pushing-mcp = "humanoid_swe_challenge.mcp.box_pushing_mcp:main"
+pusher-manip-mcp = "humanoid_swe_challenge.mcp.pusher_manip_mcp:main"
 humanoid-llm-agent = "humanoid_swe_challenge.llm_agent.agent:main"
 
 [build-system]

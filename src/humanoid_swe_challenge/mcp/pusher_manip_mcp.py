@@ -4,13 +4,12 @@ import functools
 from fastmcp import FastMCP
 
 from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
-from humanoid_swe_challenge.config import MCP_HOST, MCP_PORT
 from humanoid_swe_challenge.mcp.utils import obs_to_dict
 
-import sys
-import logging
+import logging, sys
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+# logger.propagate = False
 
 
 
@@ -80,8 +79,8 @@ def main():
             ENV.save_video()
 
     signal.signal(signal.SIGTERM, _shutdown)
-    # mcp.run(transport="stdio")
-    mcp.run(transport="streamable-http", host=MCP_HOST, port=MCP_PORT)
+    mcp.run(transport="stdio")
+    # mcp.run(transport="streamable-http", host=MCP_HOST, port=MCP_PORT)
 
 if __name__ == "__main__":
     main()

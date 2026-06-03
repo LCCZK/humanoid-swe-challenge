@@ -1,7 +1,7 @@
 <mujoco model="pushing_scene_cfg_match">
   <asset>
     <material name="mat_workspace"  rgba="0.70 0.70 0.70 1" shininess="0.05"/>
-    <material name="mat_pusher"     rgba="0.66 0.41 0.20 1" shininess="0.2"/>
+    <material name="mat_pusher"     rgba="1 0.65 0.20 1"/>
     <material name="mat_goal_g"     rgba="0 1 0 0.35"/>
     <material name="mat_goal_r"     rgba="1 0 0 0.35"/>
     <material name="mat_goal_b"     rgba="0 0 1 0.35"/>

@@ -62,7 +62,7 @@ class PusherManipEnv(BaseEnv):
         return self.get_obs(), {}
         
     def step(self, action: np.ndarray, step_count:int = 1):
-        step_count = min(step_count,100)
+        step_count = min(step_count,self.cfg.max_step_duration)
         for _ in range(step_count):
             super().step(action)
         self._step_count += step_count
