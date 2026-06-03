@@ -3,3 +3,4 @@
 .vscode
 /video/recording.mp4
 MUJOCO_LOG.TXT
+**/.DS_Store
