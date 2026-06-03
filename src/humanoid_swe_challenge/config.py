@@ -20,14 +20,14 @@ class VideoCfg():
     video_size = (640, 480)
     video_path = "video/recording.mp4"
 
-# Task configuration for Pusher Manipulation
+# Task 1: Pusher Manipulation
 class PusherManipEnvCfg():
     import numpy as np
 
     task_name: str = "Pusher Manipulation"
     random_goal_pose: bool = True
     random_goal_pose_low = np.array([-0.3, -0.3, 0.05])
-    random_goal_pose_high = np.array([0.3, 0.3, 0.65])
+    random_goal_pose_high = np.array([0.3, 0.3, 0.45])
 
     sim_cfg = SimCfg()
     video_cfg = VideoCfg()

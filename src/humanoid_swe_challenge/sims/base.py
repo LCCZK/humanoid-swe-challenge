@@ -61,18 +61,18 @@ class BaseEnv(gym.Env):
         writer.release()
     
     def render(self):
+        if self.record_video:
+            frame = self.buffer_video()
+
         if self.render_mode == "human":
             if not hasattr(self, "_viewer") or self._viewer is None:
                 self._viewer = viewer.launch_passive(self.model, self.data)
             self._viewer.sync()
-            if self.record_video:
-                self.buffer_video()
+            
             return None
 
         elif self.render_mode == "rgb_array":
-            if self.record_video:
-                frame = self.buffer_video()
-            else:
+            if not self.record_video:
                 frame = self.get_current_frame()
             cv2.imshow("box_pushing", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
             cv2.waitKey(1)

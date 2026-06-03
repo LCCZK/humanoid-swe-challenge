@@ -7,7 +7,7 @@ from humanoid_swe_challenge.config import MCP_HOST, MCP_PORT
 
 from humanoid_swe_challenge.llm_agent.utils import list_tools, call_tool, call_llm
 _SERVER_URL = f"http://{MCP_HOST}:{MCP_PORT}/mcp"
-
+REDUCED_CONTEXT_MSG = [{"role": "assistant", "content": "context have been reduced"}]
 # _SERVER_PARAMS = StdioServerParameters(command="humanoid-gym-mcp")
 
 async def _run_agent(prompt: str) -> dict:
@@ -19,7 +19,7 @@ async def _run_agent(prompt: str) -> dict:
             tools = await list_tools(session)
 
             while True:
-                trimmed = messages[:1] + messages[-100:] if len(messages) > 101 else messages
+                trimmed = messages[:5] + REDUCED_CONTEXT_MSG + messages[-100:] if len(messages) > 106 else messages
                 response = call_llm(trimmed, tools)
                 msg = response.choices[0].message
                 if msg.reasoning_content:

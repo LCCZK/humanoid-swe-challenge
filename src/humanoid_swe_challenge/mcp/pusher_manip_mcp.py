@@ -76,7 +76,7 @@ def get_simulation_description() -> str:
     """Describe the simulation environment."""
     return (
         "Manipulate the xyz linear velocity of a pusher to align with one of the goal positions (red/green/blue). "+ 
-        "Pusher is considered have reached the goal if the difference in xyz each is less than 0.005" +
+        "Pusher is considered have reached the goal if the distance is less than 0.005 in all 3 x, y and z axis. " +
         "Simulation must be start before any interactions/observations and closed after a task is completed"
     )
 
