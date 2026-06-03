@@ -5,7 +5,7 @@ import atexit
 from typing import Any
 
 from mujoco import viewer
-from humanoid_swe_challenge.sims.pusher_manip.env_config import VideoCfg, SimCfg
+from humanoid_swe_challenge.config import VideoCfg, SimCfg
 
 class BaseEnv(gym.Env):
     def __init__(self, 
