@@ -1,13 +1,9 @@
 import os
 
-# MCP_Server
-# MCP_HOST="localhost"
-# MCP_PORT=8000
-
 # Local_LM_Studio
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:1234/v1")
-LLM_MODEL = "qwen/qwen3.6-35b-a3b:2"
-LLM_API_KEY = "not-needed"
+LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-35b-a3b:2")
+LLM_API_KEY = os.environ.get("LLM_API_KEY", "not-needed")
 
 MCP_SERVER_COMMAND = "pusher-manip-mcp"
 USER_PROMPT = "run the pusher manipulation simulation, check the simulation description. Complete the manipulation task, move the pusher to where the blue goal is. After that moved to the red goal. After that moved to the green goal."
