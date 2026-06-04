@@ -52,6 +52,7 @@ def get_observation():
     - goal_red_xyz, goal_green_xyz, goal_blue_xyz: [x, y, z] goal centre positions in metres
     - goal_red_yaw, goal_green_yaw, goal_blue_yaw: goal yaw in radians
     - pusher_in_contact_with_box: True if the pusher is currently touching the box, False otherwise
+    Coordinate frame: x=right(+)/left(-), y=forward(+)/backward(-), z=up(+)/down(-)."
     Use this tool for precise position-based planning and to verify contact before pushing."""
     return obs_to_dict(ENV.get_obs())
 

@@ -50,7 +50,8 @@ def get_observation() -> dict|str:
     - pusher_xyz: [x, y, z] position of the pusher in metres
     - goal_red_xyz: [x, y, z] position of the red goal in metres
     - goal_green_xyz: [x, y, z] position of the green goal in metres
-    - goal_blue_xyz: [x, y, z] position of the blue goal in metres"""
+    - goal_blue_xyz: [x, y, z] position of the blue goal in metres
+    Coordinate frame: x=right(+)/left(-), y=forward(+)/backward(-), z=up(+)/down(-)."""
     obs = ENV.get_obs()
     logger.debug(msg="get_observation called")
     return obs_to_dict(obs)
@@ -73,9 +74,11 @@ def get_simulation_description() -> str:
     """Describe the simulation environment."""
     return (
         "Task: move the pusher sequentially to each goal in the order specified by the user prompt. " +
+        "Always read positions from the observation before planning. " +
         "The pusher is controlled by xyz linear velocity. " +
         "SUCCESS CONDITION: pusher position must be within 0.005 m of the goal in ALL THREE axes (x, y, and z). The z axis matters — you must match the goal height precisely. " +
         "Coordinate frame: x=right(+)/left(-), y=forward(+)/backward(-), z=up(+)/down(-). " +
+        "There is no visual render tool — use get_observation() for all navigation. " +
         "Simulation must be started before any interactions and closed after all goals are reached."
     )
 
