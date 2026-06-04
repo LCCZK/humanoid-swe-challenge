@@ -27,14 +27,15 @@ class BoxPusingEnv(BaseEnv):
     random_goal_pose = False
     random_goal_pose_range = []
 
-    def __init__(self, render_mode: str | None = None) -> None:
+    def __init__(self, render_mode: str | None = None, render_realtime: bool = False) -> None:
         
         self.cfg = BoxPushingEnvCfg()
         super().__init__(task_name=self.cfg.task_name,
                          mjcf_path=self.mjcf_path,
                          sim_cfg = self.cfg.sim_cfg,
                          video_cfg=self.cfg.video_cfg,
-                         render_mode=render_mode)
+                         render_mode=render_mode,
+                         render_realtime=render_realtime)
 
         self.id_box = self.model.body(self.box_body_name).id
         self.id_pusher = self.model.body(self.pusher_body_name).id
@@ -72,9 +73,6 @@ class BoxPusingEnv(BaseEnv):
         for _ in range(step_count):
             super().step(action)
         self._step_count += step_count
-
-        if self.record_video:
-           self.save_video()
 
         return self.get_obs(), 0, False, False, {}
 

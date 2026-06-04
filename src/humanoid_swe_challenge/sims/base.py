@@ -3,6 +3,7 @@ import mujoco as mj
 import cv2
 import atexit
 import time
+import os
 from typing import Any
 
 from mujoco import viewer
@@ -14,7 +15,8 @@ class BaseEnv(gym.Env):
                  mjcf_path: str,
                  sim_cfg: SimCfg,
                  video_cfg: VideoCfg,
-                 render_mode: str | None = None) -> None:
+                 render_mode: str | None = None,
+                 render_realtime:bool = False) -> None:
         
         super().__init__()
 
@@ -27,19 +29,28 @@ class BaseEnv(gym.Env):
         self.decimation = sim_cfg.decimation
 
         self.render_mode = render_mode
+        self.render_realtime = render_realtime
+
         self.record_video = video_cfg.record_video
-        self.video_path = video_cfg.video_path
+        self.video_path = os.path.join(video_cfg.video_path,video_cfg.video_name)
         self.video_size = video_cfg.video_size
-        self._frames: list = []
-        
+        self.fourcc = video_cfg.fourcc
         # self._depth_renderer = mj.Renderer(self.model, width=self.video_size[0], height=self.video_size[1])
         # self._depth_renderer.enable_depth_rendering()
         
         self._renderer = None
+        self._video_writer = None
 
         if self.record_video:
             atexit.register(self.save_video)
             self._renderer = mj.Renderer(self.model, width=self.video_size[0], height=self.video_size[1])
+            fourcc = cv2.VideoWriter.fourcc(*self.fourcc)
+            self._video_writer = cv2.VideoWriter(
+                filename=self.video_path,
+                fourcc=fourcc,
+                fps=self.physics_fps / self.decimation,
+                frameSize=self.video_size,
+            )
 
     def get_current_frame(self):
         if not hasattr(self, "_renderer") or self._renderer is None:
@@ -54,20 +65,14 @@ class BaseEnv(gym.Env):
 
     def buffer_video(self):
         frame = self.get_current_frame()
-        self._frames.append(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+        if self._video_writer is not None:
+            self._video_writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
         return frame
 
     def save_video(self):
-        if not self._frames:
-            return
-        fourcc = cv2.VideoWriter.fourcc(*"avc1")
-        writer = cv2.VideoWriter(filename=self.video_path, 
-                                 fourcc=fourcc, 
-                                 fps=self.physics_fps / self.decimation, 
-                                 frameSize=self.video_size)
-        for frame in self._frames:
-            writer.write(frame)
-        writer.release()
+        if self._video_writer is not None:
+            self._video_writer.release()
+            self._video_writer = None
     
     def render(self):
         if self.record_video:
@@ -77,7 +82,8 @@ class BaseEnv(gym.Env):
             if not hasattr(self, "_viewer") or self._viewer is None:
                 self._viewer = viewer.launch_passive(self.model, self.data)
             self._viewer.sync()
-            time.sleep(self.decimation/self.physics_fps)
+            if self.render_realtime:
+                time.sleep(self.decimation/self.physics_fps)
             return None
 
         elif self.render_mode == "rgb_array":

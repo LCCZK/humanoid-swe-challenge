@@ -5,6 +5,7 @@ from fastmcp import FastMCP
 
 from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
 from humanoid_swe_challenge.mcp.utils import obs_to_dict
+from humanoid_swe_challenge.config import MJ_RENDER_MODE, RENDER_REALTIME
 
 import logging, sys
 # logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -31,7 +32,7 @@ def start_simulation() -> str:
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = PusherManipEnv(render_mode=None)
+    ENV = PusherManipEnv(render_mode=MJ_RENDER_MODE, render_realtime=RENDER_REALTIME)
     ENV.reset(seed=42)
     return "Simulation started."
 

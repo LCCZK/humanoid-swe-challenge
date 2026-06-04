@@ -1,7 +1,8 @@
 **/*.egg-info
 **/__pycache__
 .vscode
-/video/recording.mp4
+/video/recording*
 MUJOCO_LOG.TXT
 **/.DS_Store
 **/.env
+build/

@@ -12,6 +12,10 @@ USER_PROMPT = "run the pusher manipulation simulation, check the simulation desc
 # MCP_SERVER_COMMAND = "box-pushing-mcp"
 # USER_PROMPT = "run the 3D box-pushing simulation, check the simulation description. Then push the purple box into the blue goal. Use the image render of the environment to better understand the task. The pusher and the box can break contact, and the box will not move if the pusher is not in contact with the box. If contact is lost or you want to push the box to another direction, it is better to use the updated image render to try to re-establish contact an to confirm how the pusher is making contact with the box. Make sure to check the visual occasionally to update your understanding. Multiple actions can be applied, and the task is defiantly achievable. In the rendered image, the pusher is the sphere coloured orange"
 
+MJ_RENDER_MODE = "human"
+# MJ_RENDER_MODE = "rgb_array" 
+RENDER_REALTIME = False
+
 # MuJoCo configuration
 class SimCfg():
     physics_fps = 120
@@ -19,9 +23,11 @@ class SimCfg():
 
 # Video recording options
 class VideoCfg():
-    record_video = False
+    record_video = True
+    fourcc="XVID"
     video_size = (640, 480)
     video_path = "/home/lukas/humanoid-swe-challenge/video"
+    video_name = "recording.avi"
 
 # Task 1: Pusher Manipulation
 class PusherManipEnvCfg():

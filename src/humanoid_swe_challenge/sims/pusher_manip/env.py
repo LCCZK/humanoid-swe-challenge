@@ -21,7 +21,7 @@ class PusherManipEnv(BaseEnv):
     goal_g_body_name: str = "goal_g"
     goal_b_body_name: str = "goal_b"
 
-    def __init__(self, render_mode: str | None = None) -> None:
+    def __init__(self, render_mode: str | None = None, render_realtime: bool = False) -> None:
 
         self.cfg = PusherManipEnvCfg()
 
@@ -29,7 +29,8 @@ class PusherManipEnv(BaseEnv):
                          mjcf_path=self.mjcf_path,
                          sim_cfg = self.cfg.sim_cfg,
                          video_cfg=self.cfg.video_cfg,
-                         render_mode=render_mode)
+                         render_mode=render_mode,
+                         render_realtime=render_realtime)
         
         self.id_pusher = self.model.body(self.pusher_body_name).id
         self.id_goal_r = self.model.body(self.goal_r_body_name).id
@@ -66,9 +67,6 @@ class PusherManipEnv(BaseEnv):
         for _ in range(step_count):
             super().step(action)
         self._step_count += step_count
-
-        if self.record_video:
-           self.save_video()
 
         return self.get_obs(), 0, False, False, {}
     
