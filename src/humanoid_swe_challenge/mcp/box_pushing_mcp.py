@@ -8,10 +8,10 @@ from humanoid_swe_challenge.sims.box_pushing.env import BoxPusingEnv
 from humanoid_swe_challenge.mcp.utils import obs_to_dict, frame_to_base64
 
 
-import logging
-# logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+import logging, sys
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-logger.propagate = False
+# logger.propagate = False
 
 
 mcp = FastMCP("Tools for Box-Pushing simulation")
@@ -52,7 +52,6 @@ def get_observation():
     - goal_red_xyz, goal_green_xyz, goal_blue_xyz: [x, y, z] goal centre positions in metres
     - goal_red_yaw, goal_green_yaw, goal_blue_yaw: goal yaw in radians
     - pusher_in_contact_with_box: True if the pusher is currently touching the box, False otherwise
-    Coordinate frame: x=right(+)/left(-), y=forward(+)/backward(-), z=up(+)/down(-).
     Use this tool for precise position-based planning and to verify contact before pushing."""
     return obs_to_dict(ENV.get_obs())
 
@@ -74,9 +73,6 @@ def control_pusher(vx: float, vy: float, vz: float, step_size: int):
     Apply linear velocity control to the pusher for step_size simulation steps, then return the updated observation dict (same format as get_observation()).
     vx, vy, vz: velocity in metres/s, range [-1.0, 1.0], up to 8 decimal places.
     step_size: number of control steps to apply; each step advances the simulation by ~0.042 s (5/120 s). Capped at 100.
-    Setting vx=vy=vz=0 brakes the pusher and holds it in place.
-    Use small step_size (5-20) for precise contact control near the box.
-    Use large step_size (30-50) and higher velocity when repositioning in open space.
     Check pusher_in_contact_with_box in the returned observation before applying a sustained push.
     """
     obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=step_size)
@@ -87,12 +83,9 @@ def get_simulation_description() -> str:
     """Describe the simulation environment."""
     return (
         "Task: push the purple box with the pusher to align it with the BLUE goal. "+
-        "Only pushing is allowed — the pusher cannot grab or lift the box. "+
         "The box and goals each have an xyz position and yaw angle measured from the centre of the shapes. "+
         "The box has xyz full dimensions approximately 0.12 x 0.10 x 0.07 (half-extents: 0.06, 0.05, 0.035). "+
-        "The box centre rests at z≈0.045 above the ground. "+
         "The pusher is an orange sphere with radius 0.015, controlled by velocity. "+
-        "The box has very low ground friction and will slide easily — use small velocities near the goal to avoid overshooting. "+
         "The pusher and box are separate objects; contact can break if the pusher moves away. "+
         "The workspace is approximately ±0.4 m in x and ±0.6 m in y. "+
         "Simulation must be closed after the task is completed."

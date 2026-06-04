@@ -27,28 +27,30 @@ def require_simulation(func):
 
 
 @mcp.tool
-def start_simulation() -> str:
-    """Start a simulation for pusher manipulation task in MuJoCo."""
+def start_simulation() -> dict|str:
+    """Start the pusher manipulation simulation in MuJoCo. Returns the initial observation dict so you immediately know the pusher and all goal positions. Always read the returned positions before planning."""
     global ENV
     if ENV is not None:
         return "Simulation already running."
     ENV = PusherManipEnv(log_path=LOG_PATH)
-    ENV.reset(seed=NP_RANDOM_SEED)
-    return "Simulation started."
+    obs, _ = ENV.reset(seed=NP_RANDOM_SEED)
+    return obs_to_dict(obs)
 
 @mcp.tool
 @require_simulation
 def close_simulation() -> str:
-    """Close the pusher manipulation simulation."""
+    """Close the pusher manipulation simulation. Call this after all goals have been reached."""
     ENV.close()
     return "Simulation terminated."
 
 @mcp.tool
 @require_simulation
 def get_observation() -> dict|str:
-    """
-    Return the current observation from the simulation. Return dict contains the current xyz coordinate of the pusher, and the goals (red/green/blue).
-    """
+    """Return the current simulation state as a dictionary with keys:
+    - pusher_xyz: [x, y, z] position of the pusher in metres
+    - goal_red_xyz: [x, y, z] position of the red goal in metres
+    - goal_green_xyz: [x, y, z] position of the green goal in metres
+    - goal_blue_xyz: [x, y, z] position of the blue goal in metres"""
     obs = ENV.get_obs()
     logger.debug(msg="get_observation called")
     return obs_to_dict(obs)
@@ -57,10 +59,11 @@ def get_observation() -> dict|str:
 @require_simulation
 def control_pusher(vx: float, vy: float, vz: float, step_size: int)  -> dict|str:
     """
-    Apply linear velocity control to the pusher end effector for step_size simulation steps.
-    vx, vy, vz: linear velocity in [-1.000, 1.000], can take up to 8 decimal places. 
-    step_size:  step_size=1 applys the control signal once and advance the simulation for approximately 5/120 s, step_size is capped at 100. 
-    Returns updated observation.
+    Apply linear velocity control to the pusher for step_size simulation steps, then return the updated observation dict (same format as get_observation()).
+    vx, vy, vz: velocity in metres/s, range [-1.0, 1.0], up to 8 decimal places.
+    step_size: number of control steps to apply; each step advances the simulation by ~0.042 s (5/120 s). Capped at 100.
+    Setting vx=vy=vz=0 brakes the pusher and holds it in place.
+    Use small step_size (5-20) for precise control near a goal; use large step_size (30-50) when moving in open space.
     """
     obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]), step_count=step_size)
     return obs_to_dict(obs)
@@ -69,9 +72,11 @@ def control_pusher(vx: float, vy: float, vz: float, step_size: int)  -> dict|str
 def get_simulation_description() -> str:
     """Describe the simulation environment."""
     return (
-        "Manipulate the xyz linear velocity of a pusher to align with one of the goal positions (red/green/blue). "+ 
-        "Pusher is considered have reached the goal if the distance is less than 0.005 in all 3 x, y and z axis. " +
-        "Simulation must be start before any interactions/observations and closed after a task is completed"
+        "Task: move the pusher sequentially to each goal in the order specified by the user prompt. " +
+        "The pusher is controlled by xyz linear velocity. " +
+        "SUCCESS CONDITION: pusher position must be within 0.005 m of the goal in ALL THREE axes (x, y, and z). The z axis matters — you must match the goal height precisely. " +
+        "Coordinate frame: x=right(+)/left(-), y=forward(+)/backward(-), z=up(+)/down(-). " +
+        "Simulation must be started before any interactions and closed after all goals are reached."
     )
 
 def main():
