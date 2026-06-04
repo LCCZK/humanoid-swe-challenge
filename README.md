@@ -1,22 +1,27 @@
 # Humanoid SWE Challenge
 
-MuJoCo robotic simulation environments controlled by an LLM agent via the Model Context Protocol (MCP). The agent uses tool calls to observe and control simulations in a feedback loop until tasks are complete.
-
+MuJoCo robotic simulation environments controlled by an LLM agent via the Model Context Protocol (MCP). The agent uses tool calls to observe and control simulations in a feedback loop until tasks are complete. Please do not hesitate to reach out if you have any questions :) 
 ## Overview
-
 Two simulation tasks are included:
-
 - **Pusher Manipulation** — move a pusher to sequentially reach coloured goal positions (blue → red → green)
 - **Box Pushing** — use the pusher to slide a purple box onto a blue goal region
 
 The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the simulation step-by-step using position observations and velocity control.
 
 ## Architecture
-
 - **`src/humanoid_swe_challenge/llm_agent/`** — Agent loop; calls the LLM with MCP tools, parses tool calls, trims context when it grows long
 - **`src/humanoid_swe_challenge/mcp/`** — FastMCP servers exposing tools to control the MuJoCo simulations; one server per task.
 - **`src/humanoid_swe_challenge/sims/`** — Gymnasium environments wrapping MuJoCo; not directly interacted with by the agent, but used by the MCP servers to run the simulations
 - **`scripts/`** — playback scripts to replay logged action sequences with the MuJoCo viewer
+
+## Known Issues
+- Whether the tasks can be solved successfully may depend on the LLM model used and the initial prompt; the included default prompt and model have been tested with the model `qwen/qwen3.6-35b-a3b:2` hosted locally with LM-Studio with temperature 0, but may not work well with other models or prompts out of the box. Please experiment with different prompts and models if you are having trouble getting the agent to solve the tasks.
+
+- The agent may occasionally issue invalid tool calls (e.g. non-numeric velocity values) which cause the MCP server to error. The agent will not recover from this and must be restarted.
+
+- Scripts in `scripts/` are not fully tested on MacOS; please reach out if you encounter any issues running them.
+
+- MuJoCo reders may not display properly with `render_mode="human"` on some platforms; try switching to `render_mode="rgb_array"` if you encounter compatibility issues.
 
 ## Installation
 
@@ -73,11 +78,6 @@ pusher-manip-mcp
 box-pushing-mcp
 ```
 
-## Logs & Videos
-- Action sequences are saved automatically to `log/<date>/<time>.npy` after each run.
-- Demo logs are in `log/demo/`.
-- Example videos are in `video/`.
-
 ## MCP Tools
 MCP servers host the following tools for the LLM agent to interact with the simulations:
 
@@ -117,3 +117,8 @@ MCP servers host the following tools for the LLM agent to interact with the simu
 | `goal_blue_xyz` | `[float, float, float]` | Blue goal center position in meters |
 | `goal_blue_yaw` | `float` | Blue goal yaw in radians |
 | `pusher_in_contact_with_box` | `bool` | Whether the pusher is currently touching the box |
+
+## Logs & Videos
+- Action sequences are saved automatically to `log/<date>/<time>.npy` after each run.
+- Demo logs are in `log/demo/`.
+- Example videos are in `video/`.
