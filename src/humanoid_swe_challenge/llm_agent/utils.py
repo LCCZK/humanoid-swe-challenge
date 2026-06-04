@@ -3,9 +3,9 @@ from openai import OpenAI
 from mcp import ClientSession
 from mcp.types import TextContent
 
-from humanoid_swe_challenge.config import LLM_API_KEY, LLM_BASE_URL, LLM_MODEL
+from humanoid_swe_challenge.config import LLM_API_KEY, LLM_URL, LLM_MODEL, LLM_TOKEN_LIMIT
 
-client = OpenAI(base_url=LLM_BASE_URL, api_key=LLM_API_KEY)
+client = OpenAI(base_url=LLM_URL, api_key=LLM_API_KEY)
 
 
 async def list_tools(session: ClientSession) -> list[dict]:
@@ -46,5 +46,5 @@ def call_llm(messages: list, tools: list):
         messages=messages,
         tools=tools,
         tool_choice="auto",
-        max_tokens=-1,
+        max_tokens=LLM_TOKEN_LIMIT,
     )

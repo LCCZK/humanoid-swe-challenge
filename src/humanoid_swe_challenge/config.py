@@ -1,9 +1,10 @@
 import os
 
 # Local_LM_Studio
-LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:1234/v1")
+LLM_URL = os.environ.get("LLM_URL", "http://localhost:1234/v1")
 LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-35b-a3b:2")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "not-needed")
+LLM_TOKEN_LIMIT = 10240
 
 MCP_SERVER_COMMAND = "pusher-manip-mcp"
 USER_PROMPT = "run the pusher manipulation simulation, check the simulation description. Complete the manipulation task, move the pusher to where the blue goal is. After that moved to the red goal. After that moved to the green goal."
@@ -18,9 +19,9 @@ class SimCfg():
 
 # Video recording options
 class VideoCfg():
-    record_video = True
+    record_video = False
     video_size = (640, 480)
-    video_path = "video/recording.mp4"
+    video_path = "/home/lukas/humanoid-swe-challenge/video"
 
 # Task 1: Pusher Manipulation
 class PusherManipEnvCfg():

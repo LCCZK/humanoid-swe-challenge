@@ -97,4 +97,7 @@ class BaseEnv(gym.Env):
     def close(self) -> None:
         if self.record_video:
             self.save_video()
+        if hasattr(self, "_viewer") and self._viewer is not None:
+            self._viewer.close()
+            self._viewer = None
         return super().close()
