@@ -6,8 +6,7 @@ from humanoid_swe_challenge.sims.config.video_cfg import VideoCfg
 
 steps=np.load("log/05-06-2026/00-00-44.npy")
 env = PusherManipEnv(render_mode="human", 
-                     render_realtime=True,
-                     video_cfg=VideoCfg())
+                     render_realtime=True)
 env.reset(seed=NP_RANDOM_SEED)
 
 for s in steps:

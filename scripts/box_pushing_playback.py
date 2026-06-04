@@ -3,10 +3,9 @@ import numpy as np
 from humanoid_swe_challenge.sims.box_pushing.env import BoxPusingEnv
 from humanoid_swe_challenge.sims.config.video_cfg import VideoCfg
 
-steps=np.load("log/04-06-2026/23-52-29.npy")
+steps=np.load("log/demo/box_pushing.npy")
 env = BoxPusingEnv(render_mode="human", 
-                     render_realtime=True,
-                     video_cfg=VideoCfg())
+                     render_realtime=True)
 env.reset()
 
 for s in steps:
