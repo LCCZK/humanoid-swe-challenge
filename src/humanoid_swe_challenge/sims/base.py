@@ -62,7 +62,7 @@ class BaseEnv(gym.Env):
 
     def get_current_frame(self):
         if not hasattr(self, "_renderer") or self._renderer is None:
-            self._renderer = mj.Renderer(self.model, width=self.video_size[0], height=self.video_size[1])
+            self._renderer = mj.Renderer(self.model, width=640, height=480)
         self._renderer.update_scene(self.data, camera=-1)
 
         return self._renderer.render()

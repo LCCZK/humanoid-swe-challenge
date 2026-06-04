@@ -23,7 +23,7 @@ async def _run_agent(prompt: str) -> dict:
             tools = await list_tools(session)
 
             while True:
-                trimmed = messages[:5] + REDUCED_CONTEXT_MSG + messages[-100:] if len(messages) > 106 else messages
+                trimmed = messages[:5] + REDUCED_CONTEXT_MSG + messages[-30:] if len(messages) > 36 else messages
                 response = await call_llm(trimmed, tools)
                 msg = response.choices[0].message
 

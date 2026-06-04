@@ -6,4 +6,6 @@ MUJOCO_LOG.TXT
 **/.DS_Store
 **/.env
 build/
-log/
+log/*
+!log/demo/
+!log/demo/**
