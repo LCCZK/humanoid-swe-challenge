@@ -8,8 +8,7 @@ seed = 42
 env = BoxPusingEnv(render_mode="human")
 observation, info = env.reset(seed=seed)
 
-for _ in range(48):
+for _ in range(10000):
     action = np.array([0.0, 0.1, 0.0])
     observation, _, _, _, info = env.step(action)
-
-env.close()
+    print("step")

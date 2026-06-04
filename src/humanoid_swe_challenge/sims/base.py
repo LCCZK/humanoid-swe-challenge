@@ -2,6 +2,7 @@ import gymnasium as gym
 import mujoco as mj
 import cv2
 import atexit
+import time
 from typing import Any
 
 from mujoco import viewer
@@ -76,7 +77,7 @@ class BaseEnv(gym.Env):
             if not hasattr(self, "_viewer") or self._viewer is None:
                 self._viewer = viewer.launch_passive(self.model, self.data)
             self._viewer.sync()
-            
+            time.sleep(self.decimation/self.physics_fps)
             return None
 
         elif self.render_mode == "rgb_array":
