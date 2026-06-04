@@ -5,7 +5,7 @@ from fastmcp import FastMCP
 
 from humanoid_swe_challenge.sims.box_pushing.env import BoxPusingEnv
 from humanoid_swe_challenge.mcp.utils import obs_to_dict, frame_to_base64
-from humanoid_swe_challenge.config import MJ_RENDER_MODE, RENDER_REALTIME
+
 
 import logging
 # logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
@@ -30,7 +30,7 @@ def start_simulation():
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = BoxPusingEnv(render_mode=MJ_RENDER_MODE, render_realtime=RENDER_REALTIME)
+    ENV = BoxPusingEnv()
     ENV.reset()
     return get_visual()
 

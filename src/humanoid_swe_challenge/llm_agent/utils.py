@@ -1,11 +1,11 @@
 import json
-from openai import OpenAI
+from openai import AsyncOpenAI
 from mcp import ClientSession
 from mcp.types import TextContent
 
 from humanoid_swe_challenge.config import LLM_API_KEY, LLM_URL, LLM_MODEL, LLM_TOKEN_LIMIT
 
-client = OpenAI(base_url=LLM_URL, api_key=LLM_API_KEY)
+client = AsyncOpenAI(base_url=LLM_URL, api_key=LLM_API_KEY)
 
 
 async def list_tools(session: ClientSession) -> list[dict]:
@@ -40,8 +40,8 @@ async def call_tool(session: ClientSession, name: str, args: dict) -> dict:
     return {"error": "No content in MCP response"}
 
 
-def call_llm(messages: list, tools: list):
-    return client.chat.completions.create(
+async def call_llm(messages: list, tools: list):
+    return await client.chat.completions.create(
         model=LLM_MODEL,
         messages=messages,
         tools=tools,

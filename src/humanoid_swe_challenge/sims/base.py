@@ -35,22 +35,16 @@ class BaseEnv(gym.Env):
         self.video_path = os.path.join(video_cfg.video_path,video_cfg.video_name)
         self.video_size = video_cfg.video_size
         self.fourcc = video_cfg.fourcc
+        self._frames: list = []
+        
         # self._depth_renderer = mj.Renderer(self.model, width=self.video_size[0], height=self.video_size[1])
         # self._depth_renderer.enable_depth_rendering()
         
         self._renderer = None
-        self._video_writer = None
 
         if self.record_video:
             atexit.register(self.save_video)
             self._renderer = mj.Renderer(self.model, width=self.video_size[0], height=self.video_size[1])
-            fourcc = cv2.VideoWriter.fourcc(*self.fourcc)
-            self._video_writer = cv2.VideoWriter(
-                filename=self.video_path,
-                fourcc=fourcc,
-                fps=self.physics_fps / self.decimation,
-                frameSize=self.video_size,
-            )
 
     def get_current_frame(self):
         if not hasattr(self, "_renderer") or self._renderer is None:
@@ -65,14 +59,20 @@ class BaseEnv(gym.Env):
 
     def buffer_video(self):
         frame = self.get_current_frame()
-        if self._video_writer is not None:
-            self._video_writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+        self._frames.append(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
         return frame
 
     def save_video(self):
-        if self._video_writer is not None:
-            self._video_writer.release()
-            self._video_writer = None
+        if not self._frames:
+            return
+        fourcc = cv2.VideoWriter.fourcc(*self.fourcc)
+        writer = cv2.VideoWriter(filename=self.video_path, 
+                                 fourcc=fourcc, 
+                                 fps=self.physics_fps / self.decimation, 
+                                 frameSize=self.video_size)
+        for frame in self._frames:
+            writer.write(frame)
+        writer.release()
     
     def render(self):
         if self.record_video:

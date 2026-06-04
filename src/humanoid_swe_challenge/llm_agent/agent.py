@@ -24,10 +24,13 @@ async def _run_agent(prompt: str) -> dict:
 
             while True:
                 trimmed = messages[:5] + REDUCED_CONTEXT_MSG + messages[-100:] if len(messages) > 106 else messages
-                response = call_llm(trimmed, tools)
+                response = await call_llm(trimmed, tools)
                 msg = response.choices[0].message
+
                 if getattr(msg, "content", None):
                     print(msg.content)
+                if getattr(msg, "reasoning_content", None):
+                    print(msg.reasoning_content)
                 # print(msg)
 
                 if not msg.tool_calls:
