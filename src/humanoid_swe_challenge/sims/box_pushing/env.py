@@ -4,38 +4,40 @@ import numpy as np
 from pathlib import Path
 
 from humanoid_swe_challenge.sims.utils import quat_to_yaw
-from humanoid_swe_challenge.config import BoxPushingEnvCfg
+from humanoid_swe_challenge.sims.config.video_cfg import VideoCfg
 from humanoid_swe_challenge.sims.base import BaseEnv
 
 class BoxPusingEnv(BaseEnv):
+    # mjcf
     mjcf_path: str = str(Path(__file__).parent / "mjcf_box_pushing.xml")
+
     #pusher
-    pusher_body_name = "pusher"
     pusher_joint_x_name = "pusher_x"
     pusher_joint_y_name = "pusher_y"
     pusher_joint_z_name = "pusher_z"
 
-    #box
+    #Body names
+    pusher_body_name = "pusher"
     box_body_name = "box"
-    box_random_init_pos = False
-
-    #goal
     goal_r_body_name = "goal_r"
     goal_g_body_name = "goal_g"
     goal_b_body_name = "goal_b"
-    goal_pos_only = False
-    random_goal_pose = False
-    random_goal_pose_range = []
+    
+    task_name = "Box Pushing"
+    max_step_size = 100
 
-    def __init__(self, render_mode: str | None = None, render_realtime: bool = False) -> None:
+    def __init__(self, 
+                 render_mode: str | None = None, 
+                 render_realtime: bool = False,
+                 video_cfg: VideoCfg|None = None,
+                 log_path: str| None = None) -> None:
         
-        self.cfg = BoxPushingEnvCfg()
-        super().__init__(task_name=self.cfg.task_name,
+        super().__init__(task_name=self.task_name,
                          mjcf_path=self.mjcf_path,
-                         sim_cfg = self.cfg.sim_cfg,
-                         video_cfg=self.cfg.video_cfg,
+                         video_cfg=video_cfg,
                          render_mode=render_mode,
-                         render_realtime=render_realtime)
+                         render_realtime=render_realtime,
+                         log_path=log_path)
 
         self.id_box = self.model.body(self.box_body_name).id
         self.id_pusher = self.model.body(self.pusher_body_name).id
@@ -69,7 +71,7 @@ class BoxPusingEnv(BaseEnv):
         return self.get_obs(), {}
         
     def step(self, action: np.ndarray, step_count:int = 1):
-        step_count = min(step_count, self.cfg.max_step_duration)
+        step_count = min(step_count, self.max_step_size)
         for _ in range(step_count):
             super().step(action)
         self._step_count += step_count

@@ -5,7 +5,7 @@ from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
 
 seed = 42
 
-env = BoxPusingEnv(render_mode="human", render_realtime=True)
+env = PusherManipEnv(render_mode="human", render_realtime=True)
 observation, info = env.reset(seed=seed)
 
 for _ in range(1000):

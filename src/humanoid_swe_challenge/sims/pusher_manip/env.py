@@ -3,7 +3,7 @@ import mujoco as mj
 import numpy as np
 from pathlib import Path
 
-from humanoid_swe_challenge.config import PusherManipEnvCfg
+from humanoid_swe_challenge.sims.config.video_cfg import VideoCfg
 from humanoid_swe_challenge.sims.base import BaseEnv
 
 class PusherManipEnv(BaseEnv):
@@ -14,23 +14,30 @@ class PusherManipEnv(BaseEnv):
     pusher_joint_x_name: str = "pusher_x"
     pusher_joint_y_name: str = "pusher_y"
     pusher_joint_z_name: str = "pusher_z"
-    pusher_radius = 0.0125
 
     #goal
     goal_r_body_name: str = "goal_r"
     goal_g_body_name: str = "goal_g"
     goal_b_body_name: str = "goal_b"
+    random_goal_pose: bool = True
+    random_goal_pose_low = np.array([-0.3, -0.3, 0.05])
+    random_goal_pose_high = np.array([0.3, 0.3, 0.45])
 
-    def __init__(self, render_mode: str | None = None, render_realtime: bool = False) -> None:
+    task_name="Pusher Manipulation"
+    max_step_size=100
 
-        self.cfg = PusherManipEnvCfg()
+    def __init__(self, 
+                 render_mode: str | None = None, 
+                 render_realtime: bool = False,
+                 video_cfg: VideoCfg | None = None,
+                 log_path: str| None = None) -> None:
 
-        super().__init__(task_name=self.cfg.task_name,
+        super().__init__(task_name=self.task_name,
                          mjcf_path=self.mjcf_path,
-                         sim_cfg = self.cfg.sim_cfg,
-                         video_cfg=self.cfg.video_cfg,
+                         video_cfg=video_cfg,
                          render_mode=render_mode,
-                         render_realtime=render_realtime)
+                         render_realtime=render_realtime,
+                         log_path=log_path)
         
         self.id_pusher = self.model.body(self.pusher_body_name).id
         self.id_goal_r = self.model.body(self.goal_r_body_name).id
@@ -52,7 +59,7 @@ class PusherManipEnv(BaseEnv):
         self._step_count = 0
         mj.mj_resetData(self.model, self.data)# type: ignore
 
-        if self.cfg.random_goal_pose:
+        if self.random_goal_pose:
             self._randomise_goals(self.id_goal_r)
             self._randomise_goals(self.id_goal_g)
             self._randomise_goals(self.id_goal_b)
@@ -63,7 +70,7 @@ class PusherManipEnv(BaseEnv):
         return self.get_obs(), {}
         
     def step(self, action: np.ndarray, step_count:int = 1):
-        step_count = min(step_count,self.cfg.max_step_duration)
+        step_count = min(step_count,self.max_step_size)
         for _ in range(step_count):
             super().step(action)
         self._step_count += step_count
@@ -77,7 +84,7 @@ class PusherManipEnv(BaseEnv):
                 "goal_blue_xyz": self.data.xpos[self.id_goal_b][:3].copy(),}
     
     def _randomise_goals(self, goal_id):
-        goal_xyz = np.random.rand(1,3) * (self.cfg.random_goal_pose_high - self.cfg.random_goal_pose_low) + self.cfg.random_goal_pose_low
+        goal_xyz = self.np_random.random((1, 3)) * (self.random_goal_pose_high - self.random_goal_pose_low) + self.random_goal_pose_low
         self._set_goal(goal_xyz, goal_id)
 
     def _set_goal(self, goal_xyz, goal_id):

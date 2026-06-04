@@ -3,6 +3,7 @@ import numpy as np
 import functools
 from fastmcp import FastMCP
 
+from humanoid_swe_challenge.config import LOG_PATH
 from humanoid_swe_challenge.sims.box_pushing.env import BoxPusingEnv
 from humanoid_swe_challenge.mcp.utils import obs_to_dict, frame_to_base64
 
@@ -30,7 +31,7 @@ def start_simulation():
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = BoxPusingEnv()
+    ENV = BoxPusingEnv(log_path=LOG_PATH)
     ENV.reset()
     return get_visual()
 
@@ -60,23 +61,16 @@ def get_visual() -> dict:
 
 @mcp.tool
 @require_simulation
-def control_pusher(vx: float, vy: float, vz: float, duration: int):
+def control_pusher(vx: float, vy: float, vz: float, step_size: int):
     """
-    Apply linear velocity control to the pusher end effector for duration simulation steps.
+    Apply linear velocity control to the pusher end effector for step_size simulation steps.
     vx, vy, vz: linear velocity in [-1.000, 1.000], can take up to 8 decimal places. 
-    duration:  duration=1 applys the control signal once and advance the simulation for approximately 5/120 s, duration is capped at 100. 
-    prioritise reducing duration for precise control. 
+    step_size:  step_size=1 applys the control signal once and advance the simulation for approximately 5/120 s, step_size is capped at 100. 
+    prioritise reducing step_size for precise control. 
     Returns updated observation.
     """
-    obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=duration)
+    obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=step_size)
     return obs_to_dict(obs)
-
-# @mcp.tool
-# @require_simulation
-# def reset_simulation() -> dict:
-#     """Reset the simulation to its initial state. Returns the initial observation."""
-#     obs, _ = ENV.reset()
-#     return _obs_to_dict(obs)
 
 @mcp.tool
 def get_simulation_description() -> str:
@@ -93,11 +87,6 @@ def get_simulation_description() -> str:
     )
 
 def main():
-    def _shutdown(signum, frame):
-        if ENV is not None:
-            ENV.save_video()
-
-    signal.signal(signal.SIGTERM, _shutdown)
     mcp.run(transport="stdio")
     # mcp.run(transport="streamable-http", host=MCP_HOST, port=MCP_PORT)
 

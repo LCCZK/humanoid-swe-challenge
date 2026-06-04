@@ -3,6 +3,7 @@ import numpy as np
 import functools
 from fastmcp import FastMCP
 
+from humanoid_swe_challenge.config import LOG_PATH,NP_RANDOM_SEED
 from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
 from humanoid_swe_challenge.mcp.utils import obs_to_dict
 
@@ -31,8 +32,8 @@ def start_simulation() -> str:
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = PusherManipEnv()
-    ENV.reset(seed=42)
+    ENV = PusherManipEnv(log_path=LOG_PATH)
+    ENV.reset(seed=NP_RANDOM_SEED)
     return "Simulation started."
 
 @mcp.tool
@@ -54,14 +55,14 @@ def get_observation() -> dict|str:
 
 @mcp.tool
 @require_simulation
-def control_pusher(vx: float, vy: float, vz: float, duration: int)  -> dict|str:
+def control_pusher(vx: float, vy: float, vz: float, step_size: int)  -> dict|str:
     """
-    Apply linear velocity control to the pusher end effector for duration simulation steps.
+    Apply linear velocity control to the pusher end effector for step_size simulation steps.
     vx, vy, vz: linear velocity in [-1.000, 1.000], can take up to 8 decimal places. 
-    duration:  duration=1 applys the control signal once and advance the simulation for approximately 5/120 s, duration is capped at 100. 
+    step_size:  step_size=1 applys the control signal once and advance the simulation for approximately 5/120 s, step_size is capped at 100. 
     Returns updated observation.
     """
-    obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=duration)
+    obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]), step_count=step_size)
     return obs_to_dict(obs)
 
 @mcp.tool
@@ -74,11 +75,6 @@ def get_simulation_description() -> str:
     )
 
 def main():
-    def _shutdown(signum, frame):
-        if ENV is not None:
-            ENV.save_video()
-
-    signal.signal(signal.SIGTERM, _shutdown)
     mcp.run(transport="stdio")
     # mcp.run(transport="streamable-http", host=MCP_HOST, port=MCP_PORT)
 
