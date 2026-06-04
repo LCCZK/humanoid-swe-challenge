@@ -51,7 +51,6 @@ def get_observation():
 @require_simulation
 def get_visual() -> dict:
     """Return a rendered image in Base 64 of the state of the current environment"""
-    print("get visual called")
     frame_b64=frame_to_base64(ENV.get_current_frame())
     return {
         "type": "image",

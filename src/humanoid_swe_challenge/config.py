@@ -2,7 +2,7 @@ import os
 
 # Local_LM_Studio
 LLM_URL = os.environ.get("LLM_URL", "http://localhost:1234/v1")
-LLM_MODEL = os.environ.get("LLM_MODEL", "google/gemma-4-e4b")
+LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-35b-a3b:2")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "not-needed")
 LLM_TOKEN_LIMIT = -1
 
