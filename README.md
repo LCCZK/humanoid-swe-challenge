@@ -14,8 +14,8 @@ The LLM agent connects to an MCP server (one per task) via stdio, receives tool 
 ## Architecture
 
 - **`src/humanoid_swe_challenge/llm_agent/`** — Agent loop; calls the LLM with MCP tools, parses tool calls, trims context when it grows long
-- **`src/humanoid_swe_challenge/mcp/`** — FastMCP servers exposing `start_simulation`, `get_observation`, `control_pusher`, `get_visual`, `close_simulation`
-- **`src/humanoid_swe_challenge/sims/`** — Gymnasium environments wrapping MuJoCo; base class handles rendering, video recording, and action logging
+- **`src/humanoid_swe_challenge/mcp/`** — FastMCP servers exposing tools to control the MuJoCo simulations; one server per task.
+- **`src/humanoid_swe_challenge/sims/`** — Gymnasium environments wrapping MuJoCo; not directly interacted with by the agent, but used by the MCP servers to run the simulations
 - **`scripts/`** — playback scripts to replay logged action sequences with the MuJoCo viewer
 
 ## Installation
@@ -50,11 +50,19 @@ The agent will start the MCP server as a subprocess, initialise the simulation, 
 
 ### Replay a logged run
 
-Edit the `np.load(...)` path in the script to point to the desired log file under `log/`.
+**Edit the `np.load(...)` path in the script to point to the desired log file under `log/`.**
 
 ```bash
-python scripts/box_pushing_playback.py
+# For Linux:
 python scripts/pusher_manip_playback.py
+# or
+python scripts/box_pushing_playback.py
+```
+```bash
+# For MacOs:
+mjpython scripts/pusher_manip_playback.py
+# or
+mjpython scripts/box_pushing_playback.py
 ```
 
 ### Run an MCP server standalone (for debugging or use with custom agents)
@@ -81,3 +89,31 @@ MCP servers host the following tools for the LLM agent to interact with the simu
 | `get_simulation_description()` | Return task description and success criteria |
 | `close_simulation()` | Tear down the environment |
 | `get_visual()` | For Box-pushing tasks only, return a base64-encoded JPEG render of the current frame |
+
+## Observations
+
+### Pusher Manipulation
+
+
+| Key | Type | Description |
+|---|---|---|
+| `pusher_xyz` | `[float, float, float]` | Pusher position in meters |
+| `goal_red_xyz` | `[float, float, float]` | Red goal position in meters |
+| `goal_green_xyz` | `[float, float, float]` | Green goal position in meters |
+| `goal_blue_xyz` | `[float, float, float]` | Blue goal position in meters |
+
+
+### Box Pushing
+
+| Key | Type | Description |
+|---|---|---|
+| `pusher_xyz` | `[float, float, float]` | Pusher position in meters |
+| `box_xyz` | `[float, float, float]` | Box center position in meters |
+| `box_yaw` | `float` | Box rotation around z-axis in radians |
+| `goal_red_xyz` | `[float, float, float]` | Red goal center position in meters |
+| `goal_red_yaw` | `float` | Red goal yaw in radians |
+| `goal_green_xyz` | `[float, float, float]` | Green goal center position in meters |
+| `goal_green_yaw` | `float` | Green goal yaw in radians |
+| `goal_blue_xyz` | `[float, float, float]` | Blue goal center position in meters |
+| `goal_blue_yaw` | `float` | Blue goal yaw in radians |
+| `pusher_in_contact_with_box` | `bool` | Whether the pusher is currently touching the box |
