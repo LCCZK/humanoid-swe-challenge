@@ -27,7 +27,7 @@ def require_simulation(func):
 
 @mcp.tool
 def start_simulation():
-    """Start the box-pusing simulation in MuJoCo. If simulation is initialise successfuly the tool will return a render image in Base 64 of the current environment"""
+    """Start the box-pushing simulation in MuJoCo. Returns a rendered image of the initial environment for spatial orientation. If the simulation is already running, returns an error message."""
     global ENV
     if ENV is not None:
         return "Simulation already running."
@@ -38,20 +38,28 @@ def start_simulation():
 @mcp.tool
 @require_simulation
 def close_simulation():
-    """Close the box-pusing simulation."""
+    """Close the box-pushing simulation. Call this after the task is complete."""
     ENV.close()
     return "Simulation terminated."
 
 @mcp.tool
 @require_simulation
 def get_observation():
-    """Return the current simulation state in a dictionary contains: pusher xyz, box xyz/yaw, xyz/yaw for three goals with colour red/green/blue and whether the pusher is currently in contact with the box."""
+    """Return the current simulation state as a dictionary with keys:
+    - pusher_xyz: [x, y, z] position of the pusher in metres
+    - box_xyz: [x, y, z] position of the box centre in metres
+    - box_yaw: box rotation around z-axis in radians
+    - goal_red_xyz, goal_green_xyz, goal_blue_xyz: [x, y, z] goal centre positions in metres
+    - goal_red_yaw, goal_green_yaw, goal_blue_yaw: goal yaw in radians
+    - pusher_in_contact_with_box: True if the pusher is currently touching the box, False otherwise
+    Coordinate frame: x=right(+)/left(-), y=forward(+)/backward(-), z=up(+)/down(-).
+    Use this tool for precise position-based planning and to verify contact before pushing."""
     return obs_to_dict(ENV.get_obs())
 
 @mcp.tool
 @require_simulation
 def get_visual() -> dict:
-    """Return a rendered image in Base 64 of the state of the current environment"""
+    """Return a rendered image of the current environment. The orange sphere is the pusher, the purple box is the target object, and the semi-transparent red/green/blue boxes are the goal regions. Use this to verify pusher contact angle and spatial layout after repositioning. For precise positions, prefer get_observation()."""
     frame_b64=frame_to_base64(ENV.get_current_frame())
     return {
         "type": "image",
@@ -63,11 +71,13 @@ def get_visual() -> dict:
 @require_simulation
 def control_pusher(vx: float, vy: float, vz: float, step_size: int):
     """
-    Apply linear velocity control to the pusher end effector for step_size simulation steps.
-    vx, vy, vz: linear velocity in [-1.000, 1.000], can take up to 8 decimal places. 
-    step_size:  step_size=1 applys the control signal once and advance the simulation for approximately 5/120 s, step_size is capped at 100. 
-    prioritise reducing step_size for precise control. 
-    Returns updated observation.
+    Apply linear velocity control to the pusher for step_size simulation steps, then return the updated observation dict (same format as get_observation()).
+    vx, vy, vz: velocity in metres/s, range [-1.0, 1.0], up to 8 decimal places.
+    step_size: number of control steps to apply; each step advances the simulation by ~0.042 s (5/120 s). Capped at 100.
+    Setting vx=vy=vz=0 brakes the pusher and holds it in place.
+    Use small step_size (5-20) for precise contact control near the box.
+    Use large step_size (30-50) and higher velocity when repositioning in open space.
+    Check pusher_in_contact_with_box in the returned observation before applying a sustained push.
     """
     obs,_,_,_, info = ENV.step(action=np.array([vx,vy,vz]),step_count=step_size)
     return obs_to_dict(obs)
@@ -76,14 +86,16 @@ def control_pusher(vx: float, vy: float, vz: float, step_size: int):
 def get_simulation_description() -> str:
     """Describe the simulation environment."""
     return (
-        "Push the box with a pusher to align with one of the goal positions (red/green/blue). "+
-        "Only pushing is allowed."
-        "The box and goals each have an xyz position and yaw angle measured from the center of the shapes. "+
-        "The box has xyz dimensions about 0.12 0.1 0.07. "+
-        "The pusher is a sphere with radius about 0.0125 you move controling its velocity. "+
-        "The pusher and the box is not attached to each other, they are both their own objects. "+
-        "The box is resting on a flat serface, can cannot be lifted with the pusher"
-        "Simulation must be closed after a task is completed"
+        "Task: push the purple box with the pusher to align it with the BLUE goal. "+
+        "Only pushing is allowed — the pusher cannot grab or lift the box. "+
+        "The box and goals each have an xyz position and yaw angle measured from the centre of the shapes. "+
+        "The box has xyz full dimensions approximately 0.12 x 0.10 x 0.07 (half-extents: 0.06, 0.05, 0.035). "+
+        "The box centre rests at z≈0.045 above the ground. "+
+        "The pusher is an orange sphere with radius 0.015, controlled by velocity. "+
+        "The box has very low ground friction and will slide easily — use small velocities near the goal to avoid overshooting. "+
+        "The pusher and box are separate objects; contact can break if the pusher moves away. "+
+        "The workspace is approximately ±0.4 m in x and ±0.6 m in y. "+
+        "Simulation must be closed after the task is completed."
     )
 
 def main():
