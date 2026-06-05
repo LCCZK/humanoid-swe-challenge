@@ -44,8 +44,10 @@ async def _run_agent(prompt: str) -> dict:
 
                 if getattr(msg, "content", None):
                     print(msg.content)
+                    print()
                 if getattr(msg, "reasoning_content", None):
                     print(msg.reasoning_content)
+                    print()
 
                 # No tool calls means the LLM has finished the task
                 if not msg.tool_calls:

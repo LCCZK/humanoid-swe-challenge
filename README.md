@@ -5,6 +5,7 @@ MuJoCo robotic simulation environments controlled by an LLM agent via the Model 
 ## Contents
 
 - [Overview](#overview)
+- [Visuals](#visuals)
 - [Architecture](#architecture)
 - [Installation](#installation)
 - [Configuration](#configuration)
@@ -20,17 +21,24 @@ Two simulation tasks are included:
 - **Pusher Manipulation** — move a pusher to sequentially reach coloured goal positions (blue → red → green)
 - **Box Pushing** — A non-prehensile manipulation task where the agent must use the pusher to slide a purple box onto a blue goal region.
 
-| Pusher Manipulation | Box Pushing |
-|---|---|
-| ![Pusher Manipulation](gif/qwen_pusher_manip.gif) | ![Box Pushing](gif/qwen_box_pushing.gif) |
-|3D render|
-|<img src="gif/pusher-manip.gif" alt="Pusher Manipulation - render with human mode" width="400" height="400"> |<img src="gif/box-pushing.gif" alt="Box Pushing - render with human mode" width="400" height="400">|
-
 The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the MuJoCo simulation using position observations and velocity control.
 
 I choose to use MuJoCo because I have trained RL agents in similar environments before for my undergraduate dissertation. I am intrested in seeing how an LLM agent performs as a comparison to traditional RL agents. 
 
 MCP was chosen for its simplicity and flexibility in exposing tools to the LLM agent.
+
+## Visuals
+| Pusher Manipulation | Box Pushing |
+|---|---|
+| ![Pusher Manipulation](gif/qwen_pusher_manip.gif) | ![Box Pushing](gif/qwen_box_pushing.gif) |
+|3D render|
+|<img src="gif/pusher-manip.gif" alt="Pusher Manipulation - render with human mode" width="400" height="400"> |<img src="gif/box-pushing.gif" alt="Box Pushing - render with human mode" width="400" height="400">|
+|LLM agent running for the pusher manipulation task|
+|||
+
+<img src="gif/running.gif" alt="Pusher Manipulation - render with human mode" width="800" > 
+
+
 
 ## Architecture
 - **`src/humanoid_swe_challenge/llm_agent/`** — Agent loop; calls the LLM with MCP tools, parses tool calls, trims context when it grows long
