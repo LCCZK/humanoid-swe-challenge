@@ -18,7 +18,11 @@ MuJoCo robotic simulation environments controlled by an LLM agent via the Model 
 ## Overview
 Two simulation tasks are included:
 - **Pusher Manipulation** — move a pusher to sequentially reach coloured goal positions (blue → red → green)
-- **Box Pushing** — use the pusher to slide a purple box onto a blue goal region
+- **Box Pushing** — A non-prehensile manipulation task where the agent must use the pusher to slide a purple box onto a blue goal region.
+
+| Pusher Manipulation | Box Pushing |
+|---|---|
+| ![Pusher Manipulation](gif/qwen_pusher_manip.gif) | ![Box Pushing](gif/qwen_box_pushing.gif) |
 
 The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the MuJoCo simulation using position observations and velocity control.
 
