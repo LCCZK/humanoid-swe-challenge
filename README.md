@@ -39,6 +39,8 @@ MCP was chosen for its simplicity and flexibility in exposing tools to the LLM a
 
 - MuJoCo renderer may not display properly with `render_mode="human"` on some platforms; try switching to `render_mode="rgb_array"` if you encounter compatibility issues.
 
+- The MCP tool `get_visual()` for the box-pushing task may fail to return renders if the MuJoCo environment fails to initialise the renderer properly; this seems to be a common issue when running MuJoCo as a subprocess.
+
 ## Installation
 
 Requires Python ≥ 3.11 and a working MuJoCo installation.
