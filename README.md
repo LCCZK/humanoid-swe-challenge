@@ -41,6 +41,8 @@ MCP was chosen for its simplicity and flexibility in exposing tools to the LLM a
 
 - The MCP tool `get_visual()` for the box-pushing task may fail to return renders if the MuJoCo environment fails to initialise the renderer properly; this seems to be a common issue when running MuJoCo as a subprocess.
 
+- Rendering the simulation while the agent is running was implemented but is disabled by default as it seems to cause some stability issues with the MuJoCo environment when run as a subprocess. If you want to enable rendering, you can change the `render_mode` variable in the MCP server code for the respective task.
+
 ## Installation
 
 Requires Python ≥ 3.11 and a working MuJoCo installation.

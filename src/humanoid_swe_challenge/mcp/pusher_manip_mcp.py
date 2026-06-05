@@ -32,7 +32,7 @@ def start_simulation() -> dict|str:
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = PusherManipEnv(log_path=LOG_PATH)
+    ENV = PusherManipEnv(render_mode=None, log_path=LOG_PATH)
     obs, _ = ENV.reset(seed=NP_RANDOM_SEED)
     return obs_to_dict(obs)
 

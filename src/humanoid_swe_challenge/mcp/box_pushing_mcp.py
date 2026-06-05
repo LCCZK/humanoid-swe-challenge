@@ -31,7 +31,7 @@ def start_simulation():
     global ENV
     if ENV is not None:
         return "Simulation already running."
-    ENV = BoxPusingEnv(log_path=LOG_PATH)
+    ENV = BoxPusingEnv(render_mode=None, log_path=LOG_PATH)
     ENV.reset()
     return get_visual()
 
