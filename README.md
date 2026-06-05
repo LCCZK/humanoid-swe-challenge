@@ -117,6 +117,16 @@ MCP servers host the following tools for the LLM agent to interact with the simu
 | `goal_blue_xyz` | `[float, float, float]` | Blue goal center position in meters |
 | `goal_blue_yaw` | `float` | Blue goal yaw in radians |
 | `pusher_in_contact_with_box` | `bool` | Whether the pusher is currently touching the box |
+| `get_visual()` | For Box-pushing tasks only, return a base64-encoded JPEG render of the current frame |
+
+## Action Control
+Both tasks use the same control scheme: 
+| Key | Type | Description |
+|---|---|---|
+| `vx` | `float` | Pusher velocity in x direction (m/s) |
+| `vy` | `float` | Pusher velocity in y direction (m/s) |
+| `vz` | `float` | Pusher velocity in z direction (m/s) |
+| `step_size` | `int` | Number of simulation steps to apply the velocity |
 
 ## Logs & Videos
 - Action sequences are saved automatically to `log/<date>/<time>.npy` after each run.
