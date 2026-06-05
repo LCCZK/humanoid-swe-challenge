@@ -33,8 +33,8 @@ MCP was chosen for its simplicity and flexibility in exposing tools to the LLM a
 | ![Pusher Manipulation](gif/qwen_pusher_manip.gif) | ![Box Pushing](gif/qwen_box_pushing.gif) |
 |3D render|
 |<img src="gif/pusher-manip.gif" alt="Pusher Manipulation - render with human mode" width="400" height="400"> |<img src="gif/box-pushing.gif" alt="Box Pushing - render with human mode" width="400" height="400">|
-|LLM agent running for the pusher manipulation task|
-|||
+|`claude-sonnet-4-6` attempting the pusher manipulation task.|
+
 
 <img src="gif/running.gif" alt="Pusher Manipulation - render with human mode" width="800" > 
 
