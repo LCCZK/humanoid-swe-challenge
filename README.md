@@ -23,6 +23,8 @@ Two simulation tasks are included:
 | Pusher Manipulation | Box Pushing |
 |---|---|
 | ![Pusher Manipulation](gif/qwen_pusher_manip.gif) | ![Box Pushing](gif/qwen_box_pushing.gif) |
+|3D render|
+|<img src="gif/pusher-manip.gif" alt="Pusher Manipulation - render with human mode" width="400" height="400"> |<img src="gif/box-pushing.gif" alt="Box Pushing - render with human mode" width="400" height="400">|
 
 The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the MuJoCo simulation using position observations and velocity control.
 
