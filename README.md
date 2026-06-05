@@ -37,7 +37,7 @@ MCP was chosen for its simplicity and flexibility in exposing tools to the LLM a
 - **`scripts/`** — playback scripts to replay logged action sequences with the MuJoCo viewer
 
 ## Known Issues
-- Whether the tasks can be solved successfully may depend on the LLM model used and the initial prompt; the included default prompt were tested with the model `qwen/qwen3.6-35b-a3b:2` hosted locally with LM-Studio with `temperature=0`, but may not work well with other models or prompts out of the box. Please experiment with different prompts and models if you are having trouble getting the agent to solve the tasks.
+- Task success may depend on the LLM model and prompt used. We tested the default prompt with `qwen/qwen3.6-35b-a3b:2` hosted locally via LM Studio at `temperature=0`, but may not work well with other models or prompts out of the box. In particular, the box-pushing task requires a more carefully engineered prompt and a model capable of processing visual inputs to understand the environment spatially. If you are having trouble, try experimenting with different prompts and models.
 
 - The agent may occasionally issue invalid tool calls (e.g. non-numeric velocity values) which cause the MCP server to error. The agent will not recover from this and must be restarted.
 
