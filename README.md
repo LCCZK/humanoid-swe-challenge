@@ -1,6 +1,20 @@
 # Humanoid SWE Challenge
 
 MuJoCo robotic simulation environments controlled by an LLM agent via the Model Context Protocol (MCP). The agent uses tool calls to observe and control simulations in a feedback loop until tasks are complete. Please do not hesitate to reach out if you have any questions :) 
+
+## Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Known Issues](#known-issues)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [MCP Tools](#mcp-tools)
+- [Observations](#observations)
+- [Action Control](#action-control)
+- [Logs & Videos](#logs--videos)
+
 ## Overview
 Two simulation tasks are included:
 - **Pusher Manipulation** — move a pusher to sequentially reach coloured goal positions (blue → red → green)
@@ -132,3 +146,4 @@ Both tasks use the same control scheme:
 - Action sequences will be saved automatically to `log/<date>/<time>.npy` after each the MuJoCo environment is closed.
 - Demo logs are in `log/demo/`.
 - Example videos are in `video/`.
+
