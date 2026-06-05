@@ -8,6 +8,10 @@ Two simulation tasks are included:
 
 The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the MuJoCo simulation using position observations and velocity control.
 
+I choose to use MuJoCo because I have trained RL agents in these environments before for my undergraduate dissertation, and I am intrested in seeing how an LLM agent performs on them as a comparison to traditional RL agents. 
+
+MCP was chosen for its simplicity and flexibility in exposing tools to the LLM agent.
+
 ## Architecture
 - **`src/humanoid_swe_challenge/llm_agent/`** — Agent loop; calls the LLM with MCP tools, parses tool calls, trims context when it grows long
 - **`src/humanoid_swe_challenge/mcp/`** — FastMCP servers exposing tools to control the MuJoCo simulations; one server per task.
@@ -15,13 +19,11 @@ The LLM agent connects to an MCP server (one per task) via stdio, receives tool 
 - **`scripts/`** — playback scripts to replay logged action sequences with the MuJoCo viewer
 
 ## Known Issues
-- Whether the tasks can be solved successfully may depend on the LLM model used and the initial prompt; the included default prompt and model have been tested with the model `qwen/qwen3.6-35b-a3b:2` hosted locally with LM-Studio with temperature 0, but may not work well with other models or prompts out of the box. Please experiment with different prompts and models if you are having trouble getting the agent to solve the tasks.
+- Whether the tasks can be solved successfully may depend on the LLM model used and the initial prompt; the included default prompt and model have been tested with the model `qwen/qwen3.6-35b-a3b:2` hosted locally with LM-Studio with `temperature 0`, but may not work well with other models or prompts out of the box. Please experiment with different prompts and models if you are having trouble getting the agent to solve the tasks.
 
 - The agent may occasionally issue invalid tool calls (e.g. non-numeric velocity values) which cause the MCP server to error. The agent will not recover from this and must be restarted.
 
-- Scripts in `scripts/` are not fully tested on MacOS; please reach out if you encounter any issues running them.
-
-- MuJoCo reders may not display properly with `render_mode="human"` on some platforms; try switching to `render_mode="rgb_array"` if you encounter compatibility issues.
+- MuJoCo renderer may not display properly with `render_mode="human"` on some platforms; try switching to `render_mode="rgb_array"` if you encounter compatibility issues.
 
 ## Installation
 
