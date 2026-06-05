@@ -105,19 +105,17 @@ MCP servers host the following tools for the LLM agent to interact with the simu
 
 ### Box Pushing
 
+Box-pushing observations include the same pusher and goal position information as pusher manipulation, as well as the following additional information about the box state:
+
 | Key | Type | Description |
 |---|---|---|
-| `pusher_xyz` | `[float, float, float]` | Pusher position in meters |
 | `box_xyz` | `[float, float, float]` | Box center position in meters |
 | `box_yaw` | `float` | Box rotation around z-axis in radians |
-| `goal_red_xyz` | `[float, float, float]` | Red goal center position in meters |
 | `goal_red_yaw` | `float` | Red goal yaw in radians |
-| `goal_green_xyz` | `[float, float, float]` | Green goal center position in meters |
 | `goal_green_yaw` | `float` | Green goal yaw in radians |
-| `goal_blue_xyz` | `[float, float, float]` | Blue goal center position in meters |
 | `goal_blue_yaw` | `float` | Blue goal yaw in radians |
 | `pusher_in_contact_with_box` | `bool` | Whether the pusher is currently touching the box |
-| `get_visual()` | For Box-pushing tasks only, return a base64-encoded JPEG render of the current frame |
+| `get_visual()`| base64-encoded JPEG | For Box-pushing tasks only, return a render of the current frame |
 
 ## Action Control
 Both tasks use the same control scheme: 
