@@ -1,15 +1,23 @@
 import os
 
-# Local_LM_Studio
+# LLM Configuration
 LLM_URL = os.environ.get("LLM_URL", "http://localhost:1234/v1")
 LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-35b-a3b:2")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "not-needed")
 LLM_TOKEN_LIMIT = -1
-LOG_PATH="log"
-NP_RANDOM_SEED=42
+
+
+LOG_PATH="log" # Path for action logging
+NP_RANDOM_SEED=42 # Random seed used by the pusher manipulation task to generate random goal
+
+
+# ==================Task 1: Pusher Manipulation ========================
 
 MCP_SERVER_COMMAND = "pusher-manip-mcp"
 USER_PROMPT = "run the pusher manipulation simulation, check the simulation description. Complete the manipulation task, move the pusher to where the blue goal is. After that moved to the red goal. After that moved to the green goal."
+
+
+# ==================Task 2: Box Pushing ========================
 
 # MCP_SERVER_COMMAND = "box-pushing-mcp"
 # USER_PROMPT = """Run the 3D box-pushing simulation, then push the purple box to overlap with the blue goal.
