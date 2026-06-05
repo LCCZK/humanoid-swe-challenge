@@ -28,7 +28,7 @@ Two simulation tasks are included:
 
 The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the MuJoCo simulation using position observations and velocity control.
 
-I choose to use MuJoCo because I have trained RL agents in these environments before for my undergraduate dissertation, and I am intrested in seeing how an LLM agent performs on them as a comparison to traditional RL agents. 
+I choose to use MuJoCo because I have trained RL agents in similar environments before for my undergraduate dissertation. I am intrested in seeing how an LLM agent performs as a comparison to traditional RL agents. 
 
 MCP was chosen for its simplicity and flexibility in exposing tools to the LLM agent.
 
