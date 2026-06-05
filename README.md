@@ -87,9 +87,9 @@ MCP servers host the following tools for the LLM agent to interact with the simu
 |---|---|
 | `start_simulation()` | Initialise the environment and return the first observation |
 | `get_observation()` | Return current positions of pusher and goals (and box, for box-pushing) |
-| `control_pusher(vx, vy, vz, step_size)` | Apply velocity for N steps; returns updated observation |
+| `control_pusher(vx, vy, vz, step_size)` | Apply velocity control for N steps; returns updated observation |
 | `get_simulation_description()` | Return task description and success criteria |
-| `close_simulation()` | Tear down the environment |
+| `close_simulation()` | Close the MuJoCo environment |
 | `get_visual()` | For Box-pushing tasks only, return a base64-encoded JPEG render of the current frame |
 
 ## Observations
@@ -129,6 +129,6 @@ Both tasks use the same control scheme:
 | `step_size` | `int` | Number of simulation steps to apply the velocity |
 
 ## Logs & Videos
-- Action sequences are saved automatically to `log/<date>/<time>.npy` after each run.
+- Action sequences will be saved automatically to `log/<date>/<time>.npy` after each the MuJoCo environment is closed.
 - Demo logs are in `log/demo/`.
 - Example videos are in `video/`.
