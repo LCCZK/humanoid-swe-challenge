@@ -6,7 +6,7 @@ Two simulation tasks are included:
 - **Pusher Manipulation** — move a pusher to sequentially reach coloured goal positions (blue → red → green)
 - **Box Pushing** — use the pusher to slide a purple box onto a blue goal region
 
-The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the simulation step-by-step using position observations and velocity control.
+The LLM agent connects to an MCP server (one per task) via stdio, receives tool descriptions, and drives the MuJoCo simulation using position observations and velocity control.
 
 ## Architecture
 - **`src/humanoid_swe_challenge/llm_agent/`** — Agent loop; calls the LLM with MCP tools, parses tool calls, trims context when it grows long
