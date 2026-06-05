@@ -4,7 +4,11 @@ import os
 LLM_URL = os.environ.get("LLM_URL", "http://localhost:1234/v1")
 LLM_MODEL = os.environ.get("LLM_MODEL", "qwen/qwen3.6-35b-a3b:2")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "not-needed")
-LLM_TOKEN_LIMIT = -1
+LLM_TOKEN_LIMIT = 10000
+
+#Context window config:
+MSG_HEADER_SIZE = 5
+MSG_TAIL_SIZE = 30
 
 
 LOG_PATH="log" # Path for action logging

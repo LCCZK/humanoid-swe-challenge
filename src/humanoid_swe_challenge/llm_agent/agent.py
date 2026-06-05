@@ -3,13 +3,30 @@ import json
 from mcp import ClientSession
 from mcp.client.stdio import stdio_client, StdioServerParameters
 
-from humanoid_swe_challenge.config import USER_PROMPT, MCP_SERVER_COMMAND
+from humanoid_swe_challenge.config import USER_PROMPT, MCP_SERVER_COMMAND, MSG_HEADER_SIZE, MSG_TAIL_SIZE
 from humanoid_swe_challenge.llm_agent.utils import list_tools, call_tool, call_llm
 
 
 _SERVER_PARAMS = StdioServerParameters(command=MCP_SERVER_COMMAND)
 # Injected when message history is trimmed to signal the LLM that earlier context was dropped
 REDUCED_CONTEXT_MSG = [{"role": "assistant", "content": "context have been reduced"}]
+
+
+def _trim_messages(messages: list, head: int = MSG_HEADER_SIZE, tail: int = MSG_TAIL_SIZE) -> list:
+    if len(messages) <= head + 1 + tail:
+        return messages
+
+    # Extend head so an assistant message with tool_calls is never separated from its results.
+    head_end = head
+    while head_end < len(messages) and messages[head_end].get("role") == "tool":
+        head_end += 1
+
+    # Advance tail start past any tool messages whose assistant message was cut off.
+    tail_start = max(head_end, len(messages) - tail)
+    while tail_start < len(messages) and messages[tail_start].get("role") == "tool":
+        tail_start += 1
+
+    return messages[:head_end] + REDUCED_CONTEXT_MSG + messages[tail_start:]
 
 
 async def _run_agent(prompt: str) -> dict:
@@ -21,8 +38,7 @@ async def _run_agent(prompt: str) -> dict:
             tools = await list_tools(session)
 
             while True:
-                # Keep first 5 messages for context, then the most recent 30 to stay within context limits
-                trimmed = messages[:5] + REDUCED_CONTEXT_MSG + messages[-30:] if len(messages) > 36 else messages
+                trimmed = _trim_messages(messages)
                 response = await call_llm(trimmed, tools)
                 msg = response.choices[0].message
 
