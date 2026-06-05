@@ -8,9 +8,9 @@ from humanoid_swe_challenge.sims.pusher_manip.env import PusherManipEnv
 from humanoid_swe_challenge.mcp.utils import obs_to_dict
 
 import logging, sys
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+# logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-# logger.propagate = False
+logger.propagate = False
 
 
 

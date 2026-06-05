@@ -9,9 +9,9 @@ from humanoid_swe_challenge.mcp.utils import obs_to_dict, frame_to_base64
 
 
 import logging, sys
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+# logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-# logger.propagate = False
+logger.propagate = False
 
 
 mcp = FastMCP("Tools for Box-Pushing simulation")

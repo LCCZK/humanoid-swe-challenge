@@ -9,6 +9,7 @@ client = AsyncOpenAI(base_url=LLM_URL, api_key=LLM_API_KEY)
 
 
 async def list_tools(session: ClientSession) -> list[dict]:
+    # Convert MCP tool descriptors to the OpenAI function-calling schema
     mcp_tools = await session.list_tools()
     return [
         {
@@ -33,6 +34,7 @@ async def call_tool(session: ClientSession, name: str, args: dict) -> dict:
     for content in result.content:
         if isinstance(content, TextContent):
             try:
+                # Most tools return JSON; fall back to a plain string wrapper if not
                 return json.loads(content.text)
             except json.JSONDecodeError:
                 return {"result": content.text}
