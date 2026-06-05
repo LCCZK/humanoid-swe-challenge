@@ -6,7 +6,7 @@ MuJoCo robotic simulation environments controlled by an LLM agent via the Model 
 
 - [Overview](#overview)
 - [Visuals](#visuals)
-- [Architecture](#architecture)
+- [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -42,11 +42,42 @@ MCP was chosen for its simplicity and flexibility in exposing tools to the LLM a
 
 
 
-## Architecture
-- **`src/humanoid_swe_challenge/llm_agent/`** — Agent loop; calls the LLM with MCP tools, parses tool calls, trims context when it grows long
-- **`src/humanoid_swe_challenge/mcp/`** — FastMCP servers exposing tools to control the MuJoCo simulations; one server per task.
-- **`src/humanoid_swe_challenge/sims/`** — Gymnasium environments wrapping MuJoCo; not directly interacted with by the agent, but used by the MCP servers to run the simulations
-- **`scripts/`** — playback scripts to replay logged action sequences with the MuJoCo viewer
+## Project Structure
+
+```
+humanoid-swe-challenge/
+├── src/humanoid_swe_challenge/
+│   ├── config.py                        # LLM/MCP task configuration
+│   ├── llm_agent/                       # Agent loop — calls LLM, parses tool calls, trims context
+│   │   ├── agent.py
+│   │   └── utils.py
+│   ├── mcp/                             # FastMCP servers exposing tools to the LLM; one per task
+│   │   ├── pusher_manip_mcp.py
+│   │   ├── box_pushing_mcp.py
+│   │   └── utils.py
+│   └── sims/                            # Gymnasium/MuJoCo environments used by the MCP servers
+│       ├── base.py
+│       ├── utils.py
+│       ├── pusher_manip/
+│       │   ├── env.py
+│       │   └── mjcf_pusher_manip.xml    # MuJoCo scene definition
+│       ├── box_pushing/
+│       │   ├── env.py
+│       │   └── mjcf_box_pushing.xml     # MuJoCo scene definition
+│       └── config/
+│           └── video_cfg.py
+├── scripts/                             # Playback & debug utilities
+│   ├── pusher_manip_playback.py
+│   ├── box_pushing_playback.py
+│   ├── preview_mj_scene.py
+│   └── zero_agent.py
+├── log/                                 # Saved action sequences (.npy), auto-generated
+│   └── demo/                            # Bundled demo logs
+├── gif/                                 # Demo GIFs used in README
+├── video/                               # Example task recordings
+└── pyproject.toml
+```
+
 
 ## Installation
 
