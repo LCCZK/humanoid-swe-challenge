@@ -6,7 +6,6 @@ MuJoCo robotic simulation environments controlled by an LLM agent via the Model 
 
 - [Overview](#overview)
 - [Architecture](#architecture)
-- [Known Issues](#known-issues)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
@@ -14,6 +13,7 @@ MuJoCo robotic simulation environments controlled by an LLM agent via the Model 
 - [Observations](#observations)
 - [Action Control](#action-control)
 - [Logs & Videos](#logs--videos)
+- [Known Issues](#known-issues)
 
 ## Overview
 Two simulation tasks are included:
@@ -35,17 +35,6 @@ MCP was chosen for its simplicity and flexibility in exposing tools to the LLM a
 - **`src/humanoid_swe_challenge/mcp/`** — FastMCP servers exposing tools to control the MuJoCo simulations; one server per task.
 - **`src/humanoid_swe_challenge/sims/`** — Gymnasium environments wrapping MuJoCo; not directly interacted with by the agent, but used by the MCP servers to run the simulations
 - **`scripts/`** — playback scripts to replay logged action sequences with the MuJoCo viewer
-
-## Known Issues
-- Task success may depend on the LLM model and prompt used. We tested the default prompt with `qwen/qwen3.6-35b-a3b:2` hosted locally via LM Studio at `temperature=0`, but may not work well with other models or prompts out of the box. In particular, the box-pushing task requires a more carefully engineered prompt and a model capable of processing visual inputs to understand the environment spatially. If you are having trouble, try experimenting with different prompts and models.
-
-- The agent may occasionally issue invalid tool calls (e.g. non-numeric velocity values) which cause the MCP server to error. The agent will not recover from this and must be restarted.
-
-- MuJoCo renderer may not display properly with `render_mode="human"` on some platforms; try switching to `render_mode="rgb_array"` if you encounter compatibility issues.
-
-- The MCP tool `get_visual()` for the box-pushing task may fail to return renders if the MuJoCo environment fails to initialise the renderer properly; this seems to be a common issue when running MuJoCo as a subprocess.
-
-- Rendering the simulation while the agent is running was implemented but is disabled by default as it seems to cause some stability issues with the MuJoCo environment when run as a subprocess. If you want to enable rendering, you can change the `render_mode` variable in the MCP server code for the respective task.
 
 ## Installation
 
@@ -155,3 +144,13 @@ Both tasks use the same control scheme:
 - Demo logs are in `log/demo/`.
 - Example videos are in `video/`.
 
+## Known Issues
+- Task success may depend on the LLM model and prompt used. We tested the default prompt with `qwen/qwen3.6-35b-a3b:2` hosted locally via LM Studio at `temperature=0`, but may not work well with other models or prompts out of the box. In particular, the box-pushing task requires a more carefully engineered prompt and a model capable of processing visual inputs to understand the environment spatially. If you are having trouble, try experimenting with different prompts and models.
+
+- The agent may occasionally issue invalid tool calls (e.g. non-numeric velocity values) which cause the MCP server to error. The agent will not recover from this and must be restarted.
+
+- MuJoCo renderer may not display properly with `render_mode="human"` on some platforms; try switching to `render_mode="rgb_array"` if you encounter compatibility issues.
+
+- The MCP tool `get_visual()` for the box-pushing task may fail to return renders if the MuJoCo environment fails to initialise the renderer properly; this seems to be a common issue when running MuJoCo as a subprocess.
+
+- Rendering the simulation while the agent is running was implemented but is disabled by default as it seems to cause some stability issues with the MuJoCo environment when run as a subprocess. If you want to enable rendering, you can change the `render_mode` variable in the MCP server code for the respective task.
