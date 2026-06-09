@@ -106,7 +106,7 @@ Configurations `LLM_URL`, `LLM_MODEL` and `LLM_API_KEY` could be set via environ
 |`MSG_HEADER_SIZE`|`5`| Used for context management, the number of messages counting from the beginning of the history which are included in the context |
 | `MSG_TAIL_SIZE` | `30` | Used for context management, the number of messages counting from the end of the history which are included in the context | 
 
-The context management strategy by default, the agent will include the first `MSG_HEADER_SIZE` and last `MSG_TAIL_SIZE` messages from the conversation history while including an assistant message to indicate the some messages have been omitted. The rationale behind this strategy is that the initial messages often contain important information about the task and tools, while the most recent messages are crucial for maintaining context in the current conversation. The header will not end with a tool call, and the tail will not start with a tool call, to avoid cutting off important information about tool usage.
+The context management strategy by default, the agent will include the first `MSG_HEADER_SIZE` and last `MSG_TAIL_SIZE` messages from the conversation history while including an assistant message to indicate the some messages have been omitted. The rationale behind this strategy is that the initial messages often contain important information about the task and tools, while the most recent messages are crucial for maintaining context in the current conversation. The header will not end with a tool call, and the tail will not start with a tool response, to ensure that tool calls and responses are not cut off in the middle.
 ### MCP server and user prompt 
 | Variable | Default | Description |
 |---|---|---|
