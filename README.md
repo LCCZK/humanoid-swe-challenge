@@ -88,13 +88,28 @@ pip install -e .
 ```
 
 ## Configuration
+`src\humanoid_swe_challenge\config.py` contains all configuration variables for the MCP server command and initial user prompt, which can be edited as needed.
 
+### LLM configurations
 | Variable | Default | Description |
 |---|---|---|
 | `LLM_URL` | `http://localhost:1234/v1` | OpenAI-compatible API base URL |
 | `LLM_MODEL` | `qwen/qwen3.6-35b-a3b:2` | Model name |
 | `LLM_API_KEY` | `not-needed` | API key (if required) |
 | `LLM_TOKEN_LIMIT` | `-1` | Max tokens for LLM responses |
+
+Configurations `LLM_URL`, `LLM_MODEL` and `LLM_API_KEY` could be set via environment variables to connect to a custom OpenAI-compatible API endpoint. By default, the agent will attempt to connect to a local LLM server at `http://localhost:1234/v1` and use the `qwen/qwen3.6-35b-a3b:2` model, which was tested to work well with the default prompts.
+
+### LLM context management configurations
+| Variable | Default | Description |
+|---|---|---|
+|`MSG_HEADER_SIZE`|`5`| Used for context management, the number of messages counting from the beginning of the history which are included in the context |
+| `MSG_TAIL_SIZE` | `30` | Used for context management, the number of messages counting from the end of the history which are included in the context | 
+
+The context management strategy by default, the agent will include the first `MSG_HEADER_SIZE` and last `MSG_TAIL_SIZE` messages from the conversation history while including an assistant message to indicate the some messages have been omitted. The rationale behind this strategy is that the initial messages often contain important information about the task and tools, while the most recent messages are crucial for maintaining context in the current conversation. The header will not end with a tool call, and the tail will not start with a tool call, to avoid cutting off important information about tool usage.
+### MCP server and user prompt 
+| Variable | Default | Description |
+|---|---|---|
 | `MCP_SERVER_CMD` | `pusher-manip-mcp` | Command to start the MCP server subprocess |
 | `USER_PROMPT` |  | Initial prompt for the LLM agent  |
 
